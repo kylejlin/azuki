@@ -1,0 +1,41 @@
+{
+  "name": "azuki-syntax",
+  "displayName": "Azuki Syntax",
+  "description": "Syntax highlighting for Azuki grammars.",
+  "version": "0.0.1",
+  "publisher": "kylejlin",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kylejlin/azuki.git",
+    "directory": "azuki-syntax"
+  },
+  "engines": {
+    "vscode": "^1.100.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "azuki",
+        "aliases": [
+          "Azuki",
+          "azuki"
+        ],
+        "extensions": [
+          ".azuki"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "azuki",
+        "scopeName": "source.azuki",
+        "path": "./syntaxes/azuki.tmLanguage.json"
+      }
+    ]
+  }
+}

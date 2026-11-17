@@ -1,0 +1,107 @@
+{
+  "$schema": "../schemas/tmlanguage.json",
+  "name": "Azuki",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#rustStrings"
+    },
+    {
+      "include": "#keywords"
+    },
+    {
+      "include": "#constants"
+    },
+    {
+      "include": "#operators"
+    },
+    {
+      "include": "#names"
+    }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "name": "comment.line.azuki",
+          "match": "//[^\\n]*"
+        }
+      ]
+    },
+    "rustStrings": {
+      "name": "string.quoted.double.raw.azuki",
+      "begin": "rust(#*)\"",
+      "end": "\"\\1"
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "name": "keyword.control.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])(?:start|struct|enum|manual|terminal|bridge|Self)(?![a-zA-Z0-9_$@'])"
+        }
+      ]
+    },
+    "constants": {
+      "patterns": [
+        {
+          "name": "constant.language.terminal.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])\\$[A-Z][a-zA-Z0-9_]*(?![a-zA-Z0-9_$@'])"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.assignment.azuki",
+          "match": "="
+        },
+        {
+          "name": "punctuation.separator.path.azuki",
+          "match": "::"
+        },
+        {
+          "name": "punctuation.separator.field.azuki",
+          "match": ":"
+        }
+      ]
+    },
+    "names": {
+      "patterns": [
+        {
+          "name": "entity.name.type.external.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])@[A-Z][a-zA-Z0-9_]*(?![a-zA-Z0-9_$@'])"
+        },
+        {
+          "name": "entity.name.function.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])@[a-z][a-zA-Z0-9_]*(?![a-zA-Z0-9_$@'])"
+        },
+        {
+          "match": "(?<![a-zA-Z0-9_$@'])(')([a-z][a-zA-Z0-9_]*)(?![a-zA-Z0-9_$@'])",
+          "captures": {
+            "1": {
+              "name": "punctuation.definition.lifetime.azuki"
+            },
+            "2": {
+              "name": "entity.name.type.lifetime.azuki"
+            }
+          }
+        },
+        {
+          "name": "entity.name.type.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])[A-Z][a-zA-Z0-9_]*(?![a-zA-Z0-9_$@'])"
+        },
+        {
+          "name": "entity.name.variable.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])[a-z][a-zA-Z0-9_]*(?![a-zA-Z0-9_$@'])"
+        },
+        {
+          "name": "variable.other.azuki",
+          "match": "(?<![a-zA-Z0-9_$@'])_(?![a-zA-Z0-9_$@'])"
+        }
+      ]
+    }
+  },
+  "scopeName": "source.azuki"
+}
