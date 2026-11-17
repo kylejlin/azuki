@@ -6,5 +6,6 @@
 - Code location and organization matters. Defs/impls/etc. should appear in the same order throughout the codebase. Do NOT just haphazardly slap new code onto the top/bottom of the file.
 - Don't use GitHub Actions.
 - Don't add unit tests unless I ask you to.
+- You may use the gitignored `./ai_agent_temp_dir/` as you please.
 - Number feedback points consecutively throughout the conversation. Continue numbering across replies; never reuse a number. Refer back to earlier points by number so references stay unambiguous. Put actionable problems, questions, and decisions first. Keep “looks good” confirmations brief and separate, so I can focus on what needs attention.
 - At the start of each conversation, say "This conversation is scoped to {{CRATE (or a list of crates, if needed)}}. I will defer design decisions to the human. I'm prepared for voice-typing mistranscriptions. When possible, I will avoid asking the human to grant special permissions.", so the human knows you understand this file.
