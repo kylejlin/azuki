@@ -10,7 +10,7 @@ pub type EnumVariants<'a> = Vec<c::EnumVariant<'a>>;
 pub type ManualNonTerminalVariants<'a> = Vec<c::ManualNonTerminalVariant<'a>>;
 pub type TerminalEnumVariants<'a> = Vec<c::TerminalEnumVariant<'a>>;
 pub type OptEqualAtUpperName<'a> = Option<AtUpperName<'a>>;
-pub type Path<'a> = Vec<c::Name<'a>>;
+pub type PathSegments<'a> = Vec<c::Name<'a>>;
 pub type Lifetimes<'a> = Vec<SingleQuoteLowerName<'a>>;
 
 pub fn vec_empty<T>() -> Vec<T> {

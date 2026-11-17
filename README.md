@@ -94,6 +94,7 @@ pub enum InfixOp {
 
 The bridge does not need to be named `crate::azuki_bridge`.
 You can make any crate-relative path the bridge.
+The path must begin with the `crate` keyword.
 For example, these are all legal `bridge` statements:
 
 - `bridge crate`

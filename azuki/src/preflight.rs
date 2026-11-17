@@ -504,20 +504,21 @@ fn check_lifetimes<'a>(
 }
 
 fn path_fragment<'a>(source: &'a str, path: &cst::Path<'a>) -> SourceFragment<'a> {
-    let name_fragment = |name: &cst::Name<'a>| match name {
-        cst::Name::Upper(name) => name.raw,
-        cst::Name::Lower(name) => name.raw,
+    let cst::Path { crate_, segments } = path;
+    let first = crate_.raw;
+    let last = match segments.last() {
+        Some(cst::Name::Upper(name)) => name.raw,
+        Some(cst::Name::Lower(name)) => name.raw,
+        None => first,
     };
-    let first = name_fragment(path.first().expect("Parsed paths are nonempty"));
-    let last = name_fragment(path.last().expect("Parsed paths are nonempty"));
     let file_source = FileSource::new(source);
     let start = file_source
         .substr_range(first)
-        .expect("Parsed names must be fragments of their source file")
+        .expect("Parsed path tokens must be fragments of their source file")
         .start;
     let end = file_source
         .substr_range(last)
-        .expect("Parsed names must be fragments of their source file")
+        .expect("Parsed path tokens must be fragments of their source file")
         .end;
     SourceFragment::new(&source[start..end])
 }

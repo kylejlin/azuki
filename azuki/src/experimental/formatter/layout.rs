@@ -128,7 +128,11 @@ impl LayoutBuilder<'_> {
                 self.close(0);
             }
             cst::FileItem::Bridge(path) => {
-                self.line(path.len() * 2, 0);
+                let cst::Path {
+                    crate_: _,
+                    segments,
+                } = path;
+                self.line(2 + segments.len() * 2, 0);
             }
         }
     }

@@ -1,6 +1,7 @@
 const vscode = require('vscode');
 const path = require('node:path');
 const { AnalysisClient } = require('./analysis-client');
+const { FormattingProvider } = require('./formatting');
 const { RustHighlighting } = require('./rust-highlighting');
 
 const tokenTypes = ['namespace', 'type', 'struct', 'enum', 'enumMember', 'typeParameter',
@@ -10,16 +11,17 @@ const legend = new vscode.SemanticTokensLegend(tokenTypes, ['declaration']);
 function activate(context) {
     const selector = { language: 'azuki' };
     const diagnostics = vscode.languages.createDiagnosticCollection('Azuki');
-    const output = vscode.window.createOutputChannel('Azuki VS Code');
+    const output = vscode.window.createOutputChannel('Azuki');
     const changed = new vscode.EventEmitter();
     const client = new AnalysisClient(context, diagnostics, output, changed);
+    const formatting = new FormattingProvider(context, output);
     const rustExtension = vscode.extensions.getExtension('vscode.rust');
     const rustPath = path.join(rustExtension ? rustExtension.extensionPath
         : path.join(vscode.env.appRoot, 'extensions/rust'), 'syntaxes/rust.tmLanguage.json');
     const rust = new RustHighlighting(rustPath);
     // Attach the handler immediately, including when no Rust injection is open yet.
     rust.ready.catch(error => output.appendLine(`Rust highlighting unavailable: ${error.message}`));
-    context.subscriptions.push(diagnostics, output, changed, client, rust,
+    context.subscriptions.push(diagnostics, output, changed, client, formatting, rust,
         vscode.languages.registerDocumentSemanticTokensProvider(selector, {
             onDidChangeSemanticTokens: changed.event,
             async provideDocumentSemanticTokens(document, cancellation) {
@@ -64,6 +66,7 @@ function activate(context) {
                 return new vscode.Hover(markdown, range(document, found.occurrence.span));
             },
         }),
+        vscode.languages.registerDocumentFormattingEditProvider(selector, formatting),
         vscode.languages.registerRenameProvider(selector, {
             async prepareRename(document, position, cancellation) {
                 const found = await lookup(client, document, position, cancellation);
@@ -139,7 +142,7 @@ function renameName(definition, value) {
         pattern = /^'[a-z][a-zA-Z0-9_]*$/;
     } else if (definition.kind === 'property') {
         pattern = /^[a-z][a-zA-Z0-9_]*$/;
-        if (['start', 'struct', 'enum', 'manual', 'terminal', 'bridge'].includes(name)) pattern = /$a/;
+        if (['start', 'struct', 'enum', 'manual', 'terminal', 'bridge', 'crate'].includes(name)) pattern = /$a/;
     } else {
         pattern = /^[A-Z][a-zA-Z0-9_]*$/;
         if (name === 'Self') pattern = /$a/;

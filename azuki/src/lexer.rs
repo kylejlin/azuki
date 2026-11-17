@@ -133,6 +133,9 @@ enum LogosToken<'a> {
     #[token("bridge", tagged_token_callback)]
     BridgeKw(token::BridgeKw<'a>),
 
+    #[token("crate", tagged_token_callback)]
+    CrateKw(token::CrateKw<'a>),
+
     #[token("Self", tagged_token_callback)]
     UpperSelfKw(token::UpperSelfKw<'a>),
 
@@ -257,6 +260,7 @@ impl<'a> TryFrom<LogosToken<'a>> for Token<'a> {
             LogosToken::ManualKw(token) => Token::ManualKw(token),
             LogosToken::TerminalKw(token) => Token::TerminalKw(token),
             LogosToken::BridgeKw(token) => Token::BridgeKw(token),
+            LogosToken::CrateKw(token) => Token::CrateKw(token),
             LogosToken::UpperSelfKw(token) => Token::UpperSelfKw(token),
             LogosToken::Underscore(token) => Token::Underscore(token),
             LogosToken::LParen(token) => Token::LParen(token),
@@ -300,6 +304,7 @@ mod lookarounds {
             Token::ManualKw(token) => token.raw,
             Token::TerminalKw(token) => token.raw,
             Token::BridgeKw(token) => token.raw,
+            Token::CrateKw(token) => token.raw,
             Token::UpperSelfKw(token) => token.raw,
             Token::Underscore(token) => token.raw,
             Token::UpperName(token) => token.raw,

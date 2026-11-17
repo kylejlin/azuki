@@ -77,6 +77,7 @@ fn token_fragment(token: Token<'_>) -> SourceFragment<'_> {
         Token::ManualKw(token) => token.raw,
         Token::TerminalKw(token) => token.raw,
         Token::BridgeKw(token) => token.raw,
+        Token::CrateKw(token) => token.raw,
         Token::UpperSelfKw(token) => token.raw,
         Token::Underscore(token) => token.raw,
         Token::LParen(token) => token.raw,

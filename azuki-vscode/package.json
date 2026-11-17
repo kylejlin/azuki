@@ -1,8 +1,8 @@
 {
   "name": "azuki-vscode",
-  "displayName": "Azuki VS Code",
-  "description": "Highlighting, navigation, rename, hover, and diagnostics for Azuki grammars.",
-  "version": "0.0.2",
+  "displayName": "Azuki",
+  "description": "Highlighting, navigation, rename, hover, formatting, and diagnostics for Azuki grammars.",
+  "version": "0.0.3",
   "publisher": "kylejlin",
   "license": "MIT",
   "repository": {
@@ -31,7 +31,7 @@
   },
   "contributes": {
     "configuration": {
-      "title": "Azuki VS Code",
+      "title": "Azuki",
       "properties": {
         "azuki.analysisPath": {
           "type": "string",
@@ -42,7 +42,11 @@
       }
     },
     "configurationDefaults": {
-      "[azuki]": { "editor.semanticHighlighting.enabled": true }
+      "[azuki]": {
+        "editor.semanticHighlighting.enabled": true,
+        "editor.defaultFormatter": "kylejlin.azuki-vscode",
+        "editor.formatOnSave": true
+      }
     },
     "languages": [
       {

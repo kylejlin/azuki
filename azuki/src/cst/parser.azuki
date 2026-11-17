@@ -166,8 +166,14 @@ manual OptEqualAtUpperName 'a {
     @option_some(_: $Equal $AtUpperName)
 }
 
-manual Path 'a {
-    @vec_one(Name)
+rust"#[derive(Debug)]"
+struct Path {
+    crate_: $CrateKw
+    segments: PathSegments
+}
+
+manual PathSegments 'a {
+    @vec_empty
     @vec_push(Self _: $DoubleColon Name)
 }
 
@@ -202,6 +208,7 @@ manual terminal Token 'a {
     $ManualKw 'a
     $TerminalKw 'a
     $BridgeKw 'a
+    $CrateKw 'a
     $UpperSelfKw 'a
 
     $Underscore 'a

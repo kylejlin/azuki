@@ -39,7 +39,7 @@
       "patterns": [
         {
           "name": "keyword.control.azuki",
-          "match": "(?<![a-zA-Z0-9_$@'])(?:start|struct|enum|manual|terminal|bridge|Self)(?![a-zA-Z0-9_$@'])"
+          "match": "(?<![a-zA-Z0-9_$@'])(?:start|struct|enum|manual|terminal|bridge|crate|Self)(?![a-zA-Z0-9_$@'])"
         }
       ]
     },

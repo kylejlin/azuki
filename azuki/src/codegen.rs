@@ -126,13 +126,12 @@ impl<'a> SrcBuilder<'a> {
             source_type,
         } = &self.names;
         let generation_hash = generation_hash(preflight.source);
-        let bridge_path = preflight
-            .bridge_path
-            .iter()
-            .map(|name| match name {
+        let cst::Path { crate_, segments } = preflight.bridge_path;
+        let bridge_path = iter::once(crate_.raw.raw())
+            .chain(segments.iter().map(|name| match name {
                 cst::Name::Upper(name) => name.raw.raw(),
                 cst::Name::Lower(name) => name.raw.raw(),
-            })
+            }))
             .collect::<Vec<_>>()
             .join("::");
         let terminal = preflight.terminal_enum.name().raw.raw();

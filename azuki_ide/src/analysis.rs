@@ -81,6 +81,7 @@ pub fn analyze(raw: &str) -> Analysis {
             | Token::ManualKw(_)
             | Token::TerminalKw(_)
             | Token::BridgeKw(_)
+            | Token::CrateKw(_)
             | Token::UpperSelfKw(_) => "keyword",
             Token::UpperName(_) | Token::AtUpperName(_) => "type",
             Token::LowerName(_) | Token::Underscore(_) => "variable",
@@ -215,6 +216,7 @@ pub fn fragment(token: Token<'_>) -> SourceFragment<'_> {
         Token::ManualKw(t) => t.raw,
         Token::TerminalKw(t) => t.raw,
         Token::BridgeKw(t) => t.raw,
+        Token::CrateKw(t) => t.raw,
         Token::UpperSelfKw(t) => t.raw,
         Token::Underscore(t) => t.raw,
         Token::LParen(t) => t.raw,
