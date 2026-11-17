@@ -19,7 +19,7 @@ If you are unfamiliar with Kiki, you can read its [docs](https://github.com/kyle
 This section assumes you are already familiar with Kiki.
 Azuki is similar to Kiki, but it differs in several ways.
 I divide these into _key changes_ and _new features_.
-You must understand the critical changes to port your Kiki code to Azuki.
+You must understand the key changes to port your Kiki code to Azuki.
 The new features are not essential, but they may greatly improve your quality of life.
 
 Key changes:
@@ -286,8 +286,8 @@ pub fn box_new(term: Term) -> BoxedTerm {
 }
 ```
 
-This achieves similar behavior as before.
-(...but not quite identical--`Ident` is not boxed. However, if you want to box `Ident`, just repeat the same process).
+This achieves behavior similar to before.
+(...but not quite identical--`Ident` is not boxed. However, if you want to box `Ident`, just repeat the same process.)
 
 ### Code injection
 
@@ -454,7 +454,7 @@ manual Lorem 'x {
 
 #### Lifetime inference
 
-The lifetimes of `struct` and `enum`s are inferred from their (non-`_`) fields.
+The lifetimes of `struct`s and `enum`s are inferred from their (non-`_`) fields.
 
 For example:
 
