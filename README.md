@@ -25,7 +25,7 @@ Azuki differs from Kiki in the following ways:
 - There is no auto-`Box`-ing.
 - You can use an externally defined terminal enum.
 - You can use `Self` to refer to the enclosing non-terminal.
-- Outer attributes are deprecated in favor of code injection.
+- Outer attributes are no longer supported. Use code injection instead.
 
 ### The bridge
 
