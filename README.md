@@ -8,36 +8,36 @@ Azuki is a minimalist parser generator for Rust.
 
 ## Table of contents
 
-- [How to use Kiki](#how-to-use-kiki)
-- [Why use Kiki](#why-use-kiki)
-- [Kiki's limitations](#kikis-limitations)
+- [How to use Azuki](#how-to-use-azuki)
+- [Why use Azuki](#why-use-azuki)
+- [Azuki's limitations](#azukis-limitations)
 - [Example](#example)
 - [Guide](#guide)
 - [Contributing](#contributing)
 
-## How to use Kiki?
+## How to use Azuki?
 
 Read the [quickstart](./QUICKSTART.md).
 
-## Why use Kiki?
+## Why use Azuki?
 
 - **Easy to learn.**
   If you've used other parser generators before (e.g., Bison/yacc),
-  you can [learn Kiki in under 10 minutes](./QUICKSTART.md).
+  you can [learn Azuki in under 10 minutes](./QUICKSTART.md).
 - **Easy to write.**
   Tools like Bison or lalrpop force you to write
   a grammar, semantic actions, and syntax tree type definitions.
-  Kiki lets you write only the type definitions.
-  Kiki infers the grammar and semantic actions from the
+  Azuki lets you write only the type definitions.
+  Azuki infers the grammar and semantic actions from the
   type definitions.
 - **Easy to read.**
-  Kiki has a minimalist syntax.
+  Azuki has a minimalist syntax.
   This makes it easy to learn, and easy to read.
 
-## Kiki's limitations
+## Azuki's limitations
 
-- Kiki only supports LALR(1) grammars.
-- Kiki parses token sequences, not strings.
+- Azuki only supports LALR(1) grammars.
+- Azuki parses token sequences, not strings.
   - In other words, you must provide your own lexer.
     You can either implement the lexer by hand,
     or use a lexer generator (e.g., [logos](https://crates.io/crates/logos)).
@@ -55,7 +55,7 @@ For example:
 For simplicity, this language does not have operator precedence.
 Instead, you must use parentheses (e.g., `29 + (893 * 7)`).
 
-Let's compare how we build the parser using Bison and Kiki.
+Let's compare how we build the parser using Bison and Azuki.
 
 ### With Bison
 
@@ -154,11 +154,11 @@ Observe that there are _three_ things you must write:
 2. The semantic actions (e.g., `$$ = Expr::Op {...};`).
 3. The syntax tree type definitions (i.e., `enum Expr {...}` and `enum OpKind {...}`).
 
-### With Kiki
+### With Azuki
 
-In Kiki, you write:
+In Azuki, you write:
 
-```kiki
+```azuki
 terminal Token {
     $Num: i32
     $Plus: ()
@@ -201,19 +201,19 @@ Observe this code is much simpler and shorter.
 Instead of having to write the
 grammar, semantic actions, and syntax tree type definition,
 **you only need to write the syntax tree type definition.**
-Kiki infers the grammar and semantic action from the type definition.
+Azuki infers the grammar and semantic action from the type definition.
 
 ## Guide
 
 You can read the user guide [here](./USER_GUIDE.md).
-The guide explains Kiki in detail.
+The guide explains Azuki in detail.
 It is _not_ a fast read.
 
-If your goal is to grok Kiki as quickly as possible,
+If your goal is to grok Azuki as quickly as possible,
 click [here](./QUICKSTART.md).
 
 ## Contributing
 
 Contributions are welcome.
-Simply open a [new issue](https://github.com/kylejlin/kiki/issues/new) or pull request, and I'll take a look.
+Simply open a [new issue](https://github.com/kylejlin/azuki/issues/new) or pull request, and I'll take a look.
 All forms of contribution (e.g., bugfixes, tests, documentation, typo correction) are helpful.
