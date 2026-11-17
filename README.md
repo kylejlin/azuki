@@ -234,7 +234,12 @@ In Kiki,
 enum Term {
     Var(Ident)
     Abs($Backslash Ident Term)
-    App(Term Term)
+    App(
+        _: $LParen
+        Term
+        Term
+        _: $RParen
+    )
 }
 ```
 
@@ -269,7 +274,7 @@ To solve this, you can manually box:
 enum Term {
     Var(Ident)
     Abs($Backslash Ident BoxedTerm)
-    App(BoxedTerm BoxedTerm)
+    App(_: $LParen BoxedTerm BoxedTerm _: $RParen)
 }
 
 manual BoxedTerm {
