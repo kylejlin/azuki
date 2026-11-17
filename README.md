@@ -28,6 +28,7 @@ Key changes:
 - [#2.](#external-non-terminals) You can use externally defined non-terminal types and semantic actions.
 - [#3.](#no-auto-box-ing) There is no auto-`Box`-ing.
 - [#4.](#code-injection) Outer attributes are no longer supported. Use code injection instead.
+- [TODO](TODO) Non-terminals are namespaced under `non_terminals`.
 
 New features:
 
@@ -356,6 +357,50 @@ struct Number {
 
 You can add more `#`s if needed, just like Rust's raw strings.
 The number of `#`s on each side must match.
+
+### Non-terminal namespace
+
+Suppose you had the following `src/parser.kiki`:
+
+```kiki
+start Foo
+
+enum Foo {
+    // ...
+}
+
+struct Bar {
+    // ...
+}
+
+struct Qux {
+    // ...
+}
+
+// ...
+
+terminal Token {
+    // ...
+}
+```
+
+In `src/lib.rs`, you might write:
+
+```rs
+mod parser;
+
+pub use parser::{Foo, Bar, Token, parse};
+```
+
+In Azuki, non-terminals are namespaced under a `non_terminals` submodule.
+
+So, you must update `src/lib.rs` to:
+
+```rs
+mod parser;
+
+pub use parser::{non_terminal::{Foo, Bar}, Token, parse};
+```
 
 ### Lifetimes
 
