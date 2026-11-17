@@ -76,6 +76,14 @@ beside Seti's Rust, Markdown, README, license, and image icons. Use 100% browser
 zoom for the intended scale. Selecting a candidate shows it enlarged and repeated
 through another file tree; the appearance picker switches between dark and light.
 
+The preview uses Seti's actual Explorer font size: 150% of 13px, or 19.5px,
+left-aligned in its icon slot with a 22px line height. The candidates retain a
+16 × 16 canvas, with their artwork scaled to 75% and placed using
+`translate(3.75 2) scale(0.75)`. This gives the bean similar visual weight and
+the same horizontal center as the surrounding Seti glyphs. The source fragment's
+`data-file-icon-transform` supplies this shared placement to both the preview and
+the exported SVGs, so no additional preview-only offset is applied.
+
 The editable gallery is [`sources/file_icon_gallery/fragment.html`](sources/file_icon_gallery/fragment.html).
 It includes the vector artwork, both palettes, styles, interactions, and embedded
 Seti reference font. The adjacent `shell.html` supplies the standalone page and

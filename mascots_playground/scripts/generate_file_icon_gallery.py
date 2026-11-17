@@ -56,6 +56,9 @@ def expand_symbol(symbol_id, symbols, parents=()):
 def export_candidates(fragment):
     palettes = read_palettes(fragment)
     symbols = read_symbols(fragment)
+    layout = re.search(r'data-file-icon-transform="([^"]+)"', fragment)
+    if layout is None:
+        raise ValueError("Missing file icon placement in the gallery source")
     destination = ROOT / "svg/file_icons"
     destination.mkdir(parents=True, exist_ok=True)
     for symbol_id, symbol in symbols.items():
@@ -64,7 +67,10 @@ def export_candidates(fragment):
             svg = ET.Element(f"{{{SVG_NAMESPACE}}}svg", {
                 "width": "16", "height": "16", "viewBox": symbol.attrib["viewBox"],
             })
-            svg.extend(expand_symbol(symbol_id, symbols))
+            artwork = ET.SubElement(svg, f"{{{SVG_NAMESPACE}}}g", {
+                "transform": layout[1],
+            })
+            artwork.extend(expand_symbol(symbol_id, symbols))
             for element in svg.iter():
                 for attribute, value in element.attrib.items():
                     element.set(attribute, re.sub(r"var\(--([a-z-]+)\)",

@@ -65,6 +65,10 @@ Its 16 × 16 SVGs are registered as the Azuki language's default icons in
 theme uses these icons; other file icon themes can override or hide language
 icons, as described in the [VS Code file icon documentation](https://code.visualstudio.com/api/extension-guides/file-icon-theme#language-default-icons).
 
+The artwork is inset within the SVG canvas to match the size and horizontal
+center of Seti's Explorer glyphs. The playground uses the same placement and
+Seti's actual 19.5px font size, so its preview matches the packaged file icon.
+
 To regenerate the file icon artwork and copy the adopted variants into the
 extension, run these commands from the repository root:
 

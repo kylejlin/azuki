@@ -18,5 +18,12 @@
       "default": "\\E023"
     }
   },
-  "dependencies": "Python 3 standard library for regeneration; a modern browser for viewing."
+  "dependencies": "Python 3 standard library for regeneration; a modern browser for viewing.",
+  "icon_layout": {
+    "canvas": "16 x 16 CSS pixels",
+    "transform": "translate(3.75 2) scale(0.75)",
+    "reference_font_size": "150% of 13px = 19.5px",
+    "reference_line_height": "22px",
+    "method": "Shared padded artwork placement in the gallery and SVG exports; original candidate shapes preserved."
+  }
 }

@@ -3,7 +3,7 @@
   "displayName": "Azuki",
   "description": "Highlighting, navigation, rename, hover, formatting, and diagnostics for Azuki grammars.",
   "icon": "images/icon.png",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "publisher": "kylejlin",
   "license": "MIT",
   "repository": {
