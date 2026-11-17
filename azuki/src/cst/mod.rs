@@ -3,11 +3,7 @@ use crate::internal_prelude::*;
 mod azuki_bridge;
 include!(concat!(env!("OUT_DIR"), "/cst/parser.rs"));
 
-pub use parser::non_terminals::{
-    Enum, EnumVariant, Fieldset, File, FileItem, GeneratedTerminal, GrammarSymbolOrSelf,
-    ManualNonTerminal, ManualNonTerminalVariant, ManualTerminal, Name, NamedField, NamedFieldset,
-    Path, Struct, TerminalEnumVariant, TupleField, TupleFieldset, UnderscoreOrLowerName,
-};
+pub use parser::non_terminals::*;
 
 #[derive(Debug, Clone)]
 pub struct ParseError<'a> {
