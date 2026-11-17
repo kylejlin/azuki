@@ -1,0 +1,22 @@
+{
+  "source": "Original in-chat Azuki file icon gallery, 2026-11-17",
+  "artwork": "Twelve vector candidates, with dark and light palettes, preserved in fragment.html.",
+  "reference_icons": {
+    "project": "Seti UI",
+    "upstream": "https://github.com/jesseweed/seti-ui",
+    "version": "https://github.com/jesseweed/seti-ui/commit/2d6c5e68b4ded73c92dac291845ee44e1182d511",
+    "font": "seti.woff, embedded in fragment.html as a data URL",
+    "font_sha256": "b127762058f89b37b08d76185e3b0558f5c28859e39a3840a27cb28b9739d6e2",
+    "notice": "SETI_NOTICE.txt",
+    "glyphs": {
+      "rust": "\\E082",
+      "config": "\\E019",
+      "info": "\\E04D",
+      "markdown": "\\E060",
+      "license": "\\E05A",
+      "image": "\\E04C",
+      "default": "\\E023"
+    }
+  },
+  "dependencies": "Python 3 standard library for regeneration; a modern browser for viewing."
+}

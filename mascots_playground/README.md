@@ -67,6 +67,37 @@ a 256 × 256 PNG selected by the extension manifest's `icon` field. The playgrou
 retains a [1024 × 1024 master](png/09_extension_echo.png), the editable recipe in
 `sources/extension_icon.json`, and `scripts/generate_extension_icon.py`.
 
+## VS Code file icon gallery
+
+Open [`previews/file_icon_gallery.html`](previews/file_icon_gallery.html) directly
+in a browser. It preserves the interactive gallery from the chat: twelve Azuki
+file icon candidates appear together in a VS Code Explorer at 16 CSS pixels,
+beside Seti's Rust, Markdown, README, license, and image icons. Use 100% browser
+zoom for the intended scale. Selecting a candidate shows it enlarged and repeated
+through another file tree; the appearance picker switches between dark and light.
+
+The editable gallery is [`sources/file_icon_gallery/fragment.html`](sources/file_icon_gallery/fragment.html).
+It includes the vector artwork, both palettes, styles, interactions, and embedded
+Seti reference font. The adjacent `shell.html` supplies the standalone page and
+local selection storage. No Codex installation, VS Code installation, internet
+connection, or external libraries are needed to view or regenerate the gallery.
+
+Regenerate the standalone gallery and all twenty-four SVG exports with:
+
+```sh
+python3 mascots_playground/scripts/generate_file_icon_gallery.py
+```
+
+The individual 16 × 16 SVGs are in [`svg/file_icons/`](svg/file_icons/), named for
+the candidate and its `dark` or `light` appearance. Edit the symbols or palettes
+in the gallery fragment, then rerun the script to update both outputs.
+
+Seti's upstream revision and embedded font checksum are recorded in
+[`sources/file_icon_gallery/provenance.json`](sources/file_icon_gallery/provenance.json).
+Its copyright and permission notice are preserved in
+[`SETI_NOTICE.txt`](sources/file_icon_gallery/SETI_NOTICE.txt) and included in the
+standalone gallery.
+
 ## Adopted README artwork
 
 The repository README displays Echo's full walking pose at 280 × 280 pixels,
@@ -124,15 +155,22 @@ From the repository root:
 python3 mascots_playground/scripts/generate.py
 python3 mascots_playground/scripts/generate_poses.py
 python3 mascots_playground/scripts/generate_extension_icon.py
+python3 mascots_playground/scripts/generate_file_icon_gallery.py
 python3 mascots_playground/scripts/generate_readme_artwork.py
 ```
 
-Requires Python 3, NumPy, Pillow, and `rsvg-convert` on `PATH`. These were already
-available on the machine used to make the experiments. Comparison boards use
-local system fonts, with DejaVu fallbacks; those fonts are not bundled.
+Model renders and raster exports require Python 3, NumPy, Pillow, and
+`rsvg-convert` on `PATH`. These were already available on the machine used to make
+the experiments. The file icon gallery generator needs only Python 3.9 or newer's
+standard library. Comparison boards use local system fonts, with DejaVu
+fallbacks; those fonts are not bundled.
 
 ## Licensing
 
 This directory uses copyrighted artwork from the video game _Enbito_.
 The MIT License does NOT apply to this directory.
 All rights are reserved on said artwork.
+
+The Seti reference icon font embedded in the file icon gallery retains its own
+copyright and MIT permission notice; see
+[`sources/file_icon_gallery/SETI_NOTICE.txt`](sources/file_icon_gallery/SETI_NOTICE.txt).
