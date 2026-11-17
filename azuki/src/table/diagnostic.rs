@@ -162,24 +162,31 @@ impl TableConflictDiagnostic<'_> {
 
     fn non_terminal_name(&self, id: OriginalNonTerminalId) -> token::UpperName<'_> {
         match self.takeoff.preflight.non_terminal_defs[id] {
-            cst::FileItem::Start(_) => {
+            cst::FileItem::Start(_, _) => {
                 unreachable!("Non-terminal definitions cannot be start items")
             }
             cst::FileItem::Struct(cst::Struct {
                 prefix: _,
+                struct_kw: _,
                 name,
                 fieldset: _,
             }) => *name,
             cst::FileItem::Enum(cst::Enum {
                 prefix: _,
+                enum_kw: _,
                 name,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => *name,
             cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                manual_kw: _,
                 name,
                 override_: _,
                 lifetimes: _,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => *name,
             cst::FileItem::GeneratedTerminal(_) => {
                 unreachable!("Non-terminal definitions cannot be generated terminal items")
@@ -187,7 +194,7 @@ impl TableConflictDiagnostic<'_> {
             cst::FileItem::ManualTerminal(_) => {
                 unreachable!("Non-terminal definitions cannot be manual terminal items")
             }
-            cst::FileItem::Bridge(_) => {
+            cst::FileItem::Bridge(_, _) => {
                 unreachable!("Non-terminal definitions cannot be bridge items")
             }
         }
@@ -231,16 +238,20 @@ fn get_rule_origins<'a>(preflight: &PreflightCertificate<'a>) -> Vec<RuleOrigin<
     let mut out = vec![RuleOrigin::Start(preflight.start_symbol)];
     for item in &preflight.file.items {
         match item {
-            cst::FileItem::Start(_) => {}
+            cst::FileItem::Start(_, _) => {}
             cst::FileItem::Struct(cst::Struct {
                 prefix: _,
+                struct_kw: _,
                 name,
                 fieldset: _,
             }) => out.push(RuleOrigin::Struct(*name)),
             cst::FileItem::Enum(cst::Enum {
                 prefix: _,
+                enum_kw: _,
                 name,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 for cst::EnumVariant {
                     name: variant_name,
@@ -254,10 +265,13 @@ fn get_rule_origins<'a>(preflight: &PreflightCertificate<'a>) -> Vec<RuleOrigin<
                 }
             }
             cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                manual_kw: _,
                 name,
                 override_: _,
                 lifetimes: _,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 for cst::ManualNonTerminalVariant {
                     function,
@@ -272,7 +286,7 @@ fn get_rule_origins<'a>(preflight: &PreflightCertificate<'a>) -> Vec<RuleOrigin<
             }
             cst::FileItem::GeneratedTerminal(_) => {}
             cst::FileItem::ManualTerminal(_) => {}
-            cst::FileItem::Bridge(_) => {}
+            cst::FileItem::Bridge(_, _) => {}
         }
     }
     out

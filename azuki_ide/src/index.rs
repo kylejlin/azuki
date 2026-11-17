@@ -109,9 +109,10 @@ pub fn index(source: &Source<'_>, file: &cst::File<'_>, out: &mut Analysis) {
 impl<'a> Indexer<'a, '_> {
     fn item(&mut self, item: &cst::FileItem<'a>) {
         match item {
-            cst::FileItem::Start(name) => self.reference(name.raw, "item"),
+            cst::FileItem::Start(_, name) => self.reference(name.raw, "item"),
             cst::FileItem::Struct(cst::Struct {
                 prefix: _,
+                struct_kw: _,
                 name,
                 fieldset,
             }) => {
@@ -127,8 +128,11 @@ impl<'a> Indexer<'a, '_> {
             }
             cst::FileItem::Enum(cst::Enum {
                 prefix: _,
+                enum_kw: _,
                 name,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 let id = self.definition(
                     name.raw,
@@ -151,10 +155,13 @@ impl<'a> Indexer<'a, '_> {
                 }
             }
             cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                manual_kw: _,
                 name,
                 override_,
                 lifetimes,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 let implicit_bridge = override_.is_none().then(|| format!("@{}", name.raw));
                 let id = self.definition(
@@ -171,14 +178,24 @@ impl<'a> Indexer<'a, '_> {
                     inputs,
                 } in variants
                 {
-                    self.tuple_fields(inputs, id);
+                    if let Some(cst::TupleFieldset {
+                        lparen: _,
+                        fields,
+                        rparen: _,
+                    }) = inputs
+                    {
+                        self.tuple_fields(fields, id);
+                    }
                 }
             }
             cst::FileItem::GeneratedTerminal(cst::GeneratedTerminal {
                 prefix: _,
+                terminal_kw: _,
                 name,
                 global_lifetimes,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 self.definition(
                     name.raw,
@@ -191,10 +208,14 @@ impl<'a> Indexer<'a, '_> {
                 self.terminal_variants(variants);
             }
             cst::FileItem::ManualTerminal(cst::ManualTerminal {
+                manual_kw: _,
+                terminal_kw: _,
                 name,
                 override_,
                 global_lifetimes,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 let implicit_bridge = override_.is_none().then(|| format!("@{}", name.raw));
                 self.definition(
@@ -207,7 +228,7 @@ impl<'a> Indexer<'a, '_> {
                 self.lifetimes(global_lifetimes, true);
                 self.terminal_variants(variants);
             }
-            cst::FileItem::Bridge(_) => {}
+            cst::FileItem::Bridge(_, _) => {}
         }
     }
 
@@ -224,7 +245,7 @@ impl<'a> Indexer<'a, '_> {
             let last = lifetimes
                 .last()
                 .map(|t| t.raw)
-                .or_else(|| override_.map(|t| t.raw))
+                .or_else(|| override_.as_ref().map(|override_| override_.name.raw))
                 .unwrap_or(name.raw);
             let start = FileSource::new(self.source.raw)
                 .substr_range(name.raw)
@@ -269,7 +290,11 @@ impl<'a> Indexer<'a, '_> {
     fn fieldset(&mut self, fieldset: &cst::Fieldset<'a>, owner: usize) {
         match fieldset {
             cst::Fieldset::Empty => {}
-            cst::Fieldset::Named(cst::NamedFieldset { fields }) => {
+            cst::Fieldset::Named(cst::NamedFieldset {
+                lcurly: _,
+                fields,
+                rcurly: _,
+            }) => {
                 let scope = format!(
                     "field:{}",
                     self.source
@@ -279,7 +304,12 @@ impl<'a> Indexer<'a, '_> {
                         })
                         .start
                 );
-                for cst::NamedField { name, symbol } in fields {
+                for cst::NamedField {
+                    name,
+                    colon: _,
+                    symbol,
+                } in fields
+                {
                     if let cst::UnderscoreOrLowerName::Lower(name) = name {
                         let preview = format!("{}: {}", name.raw, symbol_name(symbol));
                         self.definition(name.raw, "property", scope.clone(), None, preview);
@@ -287,14 +317,18 @@ impl<'a> Indexer<'a, '_> {
                     self.symbol(symbol, owner);
                 }
             }
-            cst::Fieldset::Tuple(cst::TupleFieldset { fields }) => self.tuple_fields(fields, owner),
+            cst::Fieldset::Tuple(cst::TupleFieldset {
+                lparen: _,
+                fields,
+                rparen: _,
+            }) => self.tuple_fields(fields, owner),
         }
     }
 
     fn tuple_fields(&mut self, fields: &[cst::TupleField<'a>], owner: usize) {
         for field in fields {
             match field {
-                cst::TupleField::Used(symbol) | cst::TupleField::Skipped(symbol) => {
+                cst::TupleField::Used(symbol) | cst::TupleField::Skipped(_, _, symbol) => {
                     self.symbol(symbol, owner)
                 }
             }

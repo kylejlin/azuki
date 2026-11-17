@@ -42,15 +42,22 @@ impl<'a> TerminalEnum<'a> {
         match self {
             Self::Generated(cst::GeneratedTerminal {
                 prefix: _,
+                terminal_kw: _,
                 name,
                 global_lifetimes: _,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             })
             | Self::Manual(cst::ManualTerminal {
+                manual_kw: _,
+                terminal_kw: _,
                 name,
                 override_: _,
                 global_lifetimes: _,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => *name,
         }
     }
@@ -59,15 +66,22 @@ impl<'a> TerminalEnum<'a> {
         match self {
             Self::Generated(cst::GeneratedTerminal {
                 prefix: _,
+                terminal_kw: _,
                 name: _,
                 global_lifetimes,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             })
             | Self::Manual(cst::ManualTerminal {
+                manual_kw: _,
+                terminal_kw: _,
                 name: _,
                 override_: _,
                 global_lifetimes,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => global_lifetimes,
         }
     }
@@ -76,15 +90,22 @@ impl<'a> TerminalEnum<'a> {
         match self {
             Self::Generated(cst::GeneratedTerminal {
                 prefix: _,
+                terminal_kw: _,
                 name: _,
                 global_lifetimes: _,
+                lcurly: _,
                 variants,
+                rcurly: _,
             })
             | Self::Manual(cst::ManualTerminal {
+                manual_kw: _,
+                terminal_kw: _,
                 name: _,
                 override_: _,
                 global_lifetimes: _,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => variants,
         }
     }
@@ -183,7 +204,7 @@ fn get_required_items<'a>(
 
     for item in &file.items {
         match item {
-            cst::FileItem::Start(name) => {
+            cst::FileItem::Start(_, name) => {
                 if let Some(first) = start_symbol {
                     return Err(PreflightCheckError::MultipleStartItems(first, *name));
                 }
@@ -210,7 +231,7 @@ fn get_required_items<'a>(
                 }
                 terminal_enum = Some(TerminalEnum::Manual(def));
             }
-            cst::FileItem::Bridge(path) => {
+            cst::FileItem::Bridge(_, path) => {
                 if let Some(first) = bridge_path {
                     return Err(PreflightCheckError::MultipleBridgeItems(
                         path_fragment(source, first),
@@ -239,13 +260,13 @@ fn get_definitions<'a>(
 
     for item in &file.items {
         let name = match item {
-            cst::FileItem::Start(_) => continue,
+            cst::FileItem::Start(_, _) => continue,
             cst::FileItem::Struct(def) => def.name,
             cst::FileItem::Enum(def) => def.name,
             cst::FileItem::ManualNonTerminal(def) => def.name,
             cst::FileItem::GeneratedTerminal(def) => def.name,
             cst::FileItem::ManualTerminal(def) => def.name,
-            cst::FileItem::Bridge(_) => continue,
+            cst::FileItem::Bridge(_, _) => continue,
         };
         let key = name.raw.raw();
         if let Some(first) = item_names.insert(key, name) {
@@ -310,9 +331,10 @@ fn get_rules<'a>(
 
     for item in &file.items {
         match item {
-            cst::FileItem::Start(_) => {}
+            cst::FileItem::Start(_, _) => {}
             cst::FileItem::Struct(cst::Struct {
                 prefix: _,
+                struct_kw: _,
                 name,
                 fieldset,
             }) => {
@@ -330,7 +352,7 @@ fn get_rules<'a>(
             }
             cst::FileItem::GeneratedTerminal(_) => {}
             cst::FileItem::ManualTerminal(_) => {}
-            cst::FileItem::Bridge(_) => {}
+            cst::FileItem::Bridge(_, _) => {}
         }
     }
 
@@ -344,8 +366,11 @@ fn check_enum<'a>(
 ) -> Result<(), PreflightCheckError<'a>> {
     let cst::Enum {
         prefix: _,
+        enum_kw: _,
         name,
+        lcurly: _,
         variants,
+        rcurly: _,
     } = def;
     let lhs = definitions.non_terminal_ids[name.raw.raw()];
     let mut names = HashMap::new();
@@ -376,16 +401,20 @@ fn check_manual_non_terminal<'a>(
     rules: &mut Vec<Rule>,
 ) -> Result<(), PreflightCheckError<'a>> {
     let cst::ManualNonTerminal {
+        manual_kw: _,
         name,
         override_: _,
         lifetimes: _,
+        lcurly: _,
         variants,
+        rcurly: _,
     } = def;
     let lhs = definitions.non_terminal_ids[name.raw.raw()];
     let mut sequences = HashMap::new();
 
     for cst::ManualNonTerminalVariant { function, inputs } in variants {
-        let rhs = check_tuple_fields(inputs, lhs, definitions)?;
+        let fields = inputs.as_ref().map_or(&[][..], |fieldset| &fieldset.fields);
+        let rhs = check_tuple_fields(fields, lhs, definitions)?;
         if let Some(first) = sequences.insert(rhs.clone(), function.raw) {
             return Err(PreflightCheckError::VariantSymbolSequenceClash(
                 first,
@@ -408,11 +437,20 @@ fn check_fieldset<'a>(
 ) -> Result<Vec<OriginalSymbolId>, PreflightCheckError<'a>> {
     match fieldset {
         cst::Fieldset::Empty => Ok(Vec::new()),
-        cst::Fieldset::Named(cst::NamedFieldset { fields }) => {
+        cst::Fieldset::Named(cst::NamedFieldset {
+            lcurly: _,
+            fields,
+            rcurly: _,
+        }) => {
             let mut names = HashMap::new();
             let mut sequence = Vec::with_capacity(fields.len());
 
-            for cst::NamedField { name, symbol } in fields {
+            for cst::NamedField {
+                name,
+                colon: _,
+                symbol,
+            } in fields
+            {
                 match name {
                     cst::UnderscoreOrLowerName::Underscore(_) => {}
                     cst::UnderscoreOrLowerName::Lower(name) => {
@@ -426,9 +464,11 @@ fn check_fieldset<'a>(
 
             Ok(sequence)
         }
-        cst::Fieldset::Tuple(cst::TupleFieldset { fields }) => {
-            check_tuple_fields(fields, lhs, definitions)
-        }
+        cst::Fieldset::Tuple(cst::TupleFieldset {
+            lparen: _,
+            fields,
+            rparen: _,
+        }) => check_tuple_fields(fields, lhs, definitions),
     }
 }
 
@@ -441,7 +481,7 @@ fn check_tuple_fields<'a>(
         .iter()
         .map(|field| {
             let symbol = match field {
-                cst::TupleField::Used(symbol) | cst::TupleField::Skipped(symbol) => symbol,
+                cst::TupleField::Used(symbol) | cst::TupleField::Skipped(_, _, symbol) => symbol,
             };
             check_grammar_symbol(symbol, lhs, definitions)
         })
@@ -506,7 +546,12 @@ fn check_lifetimes<'a>(
 fn path_fragment<'a>(source: &'a str, path: &cst::Path<'a>) -> SourceFragment<'a> {
     let cst::Path { crate_, segments } = path;
     let first = crate_.raw;
-    let last = match segments.last() {
+    let last = match segments.last().map(
+        |cst::PathSegment {
+             double_colon: _,
+             name,
+         }| name,
+    ) {
         Some(cst::Name::Upper(name)) => name.raw,
         Some(cst::Name::Lower(name)) => name.raw,
         None => first,

@@ -48,12 +48,13 @@ pub(super) fn build<'a>(
 impl LayoutBuilder<'_> {
     fn item(&mut self, item: &cst::FileItem<'_>) {
         match item {
-            cst::FileItem::Start(_) => {
+            cst::FileItem::Start(_, _) => {
                 self.line(2, 0);
             }
             cst::FileItem::Struct(def) => {
                 let cst::Struct {
                     prefix,
+                    struct_kw: _,
                     name: _,
                     fieldset,
                 } = def;
@@ -65,8 +66,11 @@ impl LayoutBuilder<'_> {
             cst::FileItem::Enum(def) => {
                 let cst::Enum {
                     prefix,
+                    enum_kw: _,
                     name: _,
+                    lcurly: _,
                     variants,
+                    rcurly: _,
                 } = def;
                 self.prefix(*prefix);
                 let header = self.line(3, 0);
@@ -80,12 +84,15 @@ impl LayoutBuilder<'_> {
             }
             cst::FileItem::ManualNonTerminal(def) => {
                 let cst::ManualNonTerminal {
+                    manual_kw: _,
                     name,
                     override_,
                     lifetimes,
+                    lcurly: _,
                     variants,
+                    rcurly: _,
                 } = def;
-                self.shorthand(name.raw.raw(), *override_, 2);
+                self.shorthand(name.raw.raw(), override_.as_ref(), 2);
                 self.line(3 + override_.is_some() as usize * 2 + lifetimes.len(), 0);
                 for variant in variants {
                     let cst::ManualNonTerminalVariant {
@@ -93,8 +100,13 @@ impl LayoutBuilder<'_> {
                         inputs,
                     } = variant;
                     self.line(1, 1);
-                    if !inputs.is_empty() {
-                        self.tuple(inputs, 1);
+                    if let Some(cst::TupleFieldset {
+                        lparen: _,
+                        fields,
+                        rparen: _,
+                    }) = inputs
+                    {
+                        self.tuple(fields, 1);
                     }
                 }
                 self.close(0);
@@ -102,9 +114,12 @@ impl LayoutBuilder<'_> {
             cst::FileItem::GeneratedTerminal(def) => {
                 let cst::GeneratedTerminal {
                     prefix,
+                    terminal_kw: _,
                     name: _,
                     global_lifetimes,
+                    lcurly: _,
                     variants,
+                    rcurly: _,
                 } = def;
                 self.prefix(*prefix);
                 let header = self.line(3 + global_lifetimes.len(), 0);
@@ -114,12 +129,16 @@ impl LayoutBuilder<'_> {
             }
             cst::FileItem::ManualTerminal(def) => {
                 let cst::ManualTerminal {
+                    manual_kw: _,
+                    terminal_kw: _,
                     name,
                     override_,
                     global_lifetimes,
+                    lcurly: _,
                     variants,
+                    rcurly: _,
                 } = def;
-                self.shorthand(name.raw.raw(), *override_, 3);
+                self.shorthand(name.raw.raw(), override_.as_ref(), 3);
                 self.line(
                     4 + override_.is_some() as usize * 2 + global_lifetimes.len(),
                     0,
@@ -127,7 +146,7 @@ impl LayoutBuilder<'_> {
                 self.terminal_variants(variants);
                 self.close(0);
             }
-            cst::FileItem::Bridge(path) => {
+            cst::FileItem::Bridge(_, path) => {
                 let cst::Path {
                     crate_: _,
                     segments,
@@ -147,16 +166,28 @@ impl LayoutBuilder<'_> {
         match fieldset {
             cst::Fieldset::Empty => {}
             cst::Fieldset::Named(fieldset) => {
-                let cst::NamedFieldset { fields } = fieldset;
+                let cst::NamedFieldset {
+                    lcurly: _,
+                    fields,
+                    rcurly: _,
+                } = fieldset;
                 self.extend_line(1);
                 for field in fields {
-                    let cst::NamedField { name: _, symbol: _ } = field;
+                    let cst::NamedField {
+                        name: _,
+                        colon: _,
+                        symbol: _,
+                    } = field;
                     self.line(3, indent + 1);
                 }
                 self.close(indent);
             }
             cst::Fieldset::Tuple(fieldset) => {
-                let cst::TupleFieldset { fields } = fieldset;
+                let cst::TupleFieldset {
+                    lparen: _,
+                    fields,
+                    rparen: _,
+                } = fieldset;
                 self.tuple(fields, indent);
             }
         }
@@ -197,13 +228,20 @@ impl LayoutBuilder<'_> {
                 lifetimes,
             } = variant;
             let name = name.raw.raw().strip_prefix('$').unwrap();
-            self.shorthand(name, *override_, 1);
+            self.shorthand(name, override_.as_ref(), 1);
             self.line(1 + override_.is_some() as usize * 2 + lifetimes.len(), 1);
         }
     }
 
-    fn shorthand(&mut self, name: &str, override_: Option<token::AtUpperName<'_>>, offset: usize) {
-        if override_.is_some_and(|override_| override_.raw.raw().strip_prefix('@') == Some(name)) {
+    fn shorthand(
+        &mut self,
+        name: &str,
+        override_: Option<&cst::EqualAtUpperName<'_>>,
+        offset: usize,
+    ) {
+        if override_
+            .is_some_and(|override_| override_.name.raw.raw().strip_prefix('@') == Some(name))
+        {
             self.layout.tokens[self.cursor + offset].omitted = true;
             self.layout.tokens[self.cursor + offset + 1].omitted = true;
         }
@@ -240,7 +278,7 @@ impl LayoutBuilder<'_> {
 fn tuple_field_len(field: &cst::TupleField<'_>) -> usize {
     match field {
         cst::TupleField::Used(_) => 1,
-        cst::TupleField::Skipped(_) => 3,
+        cst::TupleField::Skipped(_, _, _) => 3,
     }
 }
 

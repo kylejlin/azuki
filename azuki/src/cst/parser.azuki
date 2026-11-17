@@ -12,25 +12,19 @@ manual Items 'a {
 
 rust"#[derive(Debug)]"
 enum FileItem {
-    Start(
-        _: $StartKw
-        $UpperName
-    )
+    Start($StartKw $UpperName)
     Struct(Struct)
     Enum(Enum)
     ManualNonTerminal(ManualNonTerminal)
     GeneratedTerminal(GeneratedTerminal)
     ManualTerminal(ManualTerminal)
-    Bridge(
-        _: $BridgeKw
-        Path
-    )
+    Bridge($BridgeKw Path)
 }
 
 rust"#[derive(Debug)]"
 struct Struct {
     prefix: OptRustStringLiteral
-    _: $StructKw
+    struct_kw: $StructKw
     name: $UpperName
     fieldset: Fieldset
 }
@@ -38,45 +32,45 @@ struct Struct {
 rust"#[derive(Debug)]"
 struct Enum {
     prefix: OptRustStringLiteral
-    _: $EnumKw
+    enum_kw: $EnumKw
     name: $UpperName
-    _: $LCurly
+    lcurly: $LCurly
     variants: EnumVariants
-    _: $RCurly
+    rcurly: $RCurly
 }
 
 rust"#[derive(Debug)]"
 struct ManualNonTerminal {
-    _: $ManualKw
+    manual_kw: $ManualKw
     name: $UpperName
     override_: OptEqualAtUpperName
     lifetimes: Lifetimes
-    _: $LCurly
+    lcurly: $LCurly
     variants: ManualNonTerminalVariants
-    _: $RCurly
+    rcurly: $RCurly
 }
 
 rust"#[derive(Debug)]"
 struct GeneratedTerminal {
     prefix: OptRustStringLiteral
-    _: $TerminalKw
+    terminal_kw: $TerminalKw
     name: $UpperName
     global_lifetimes: Lifetimes
-    _: $LCurly
+    lcurly: $LCurly
     variants: TerminalEnumVariants
-    _: $RCurly
+    rcurly: $RCurly
 }
 
 rust"#[derive(Debug)]"
 struct ManualTerminal {
-    _: $ManualKw
-    _: $TerminalKw
+    manual_kw: $ManualKw
+    terminal_kw: $TerminalKw
     name: $UpperName
     override_: OptEqualAtUpperName
     global_lifetimes: Lifetimes
-    _: $LCurly
+    lcurly: $LCurly
     variants: TerminalEnumVariants
-    _: $RCurly
+    rcurly: $RCurly
 }
 
 manual OptRustStringLiteral 'a {
@@ -93,9 +87,9 @@ enum Fieldset {
 
 rust"#[derive(Debug)]"
 struct NamedFieldset {
-    _: $LCurly
+    lcurly: $LCurly
     fields: NamedFields
-    _: $RCurly
+    rcurly: $RCurly
 }
 
 manual NamedFields 'a {
@@ -106,15 +100,15 @@ manual NamedFields 'a {
 rust"#[derive(Debug)]"
 struct NamedField {
     name: UnderscoreOrLowerName
-    _: $Colon
+    colon: $Colon
     symbol: GrammarSymbolOrSelf
 }
 
 rust"#[derive(Debug)]"
 struct TupleFieldset {
-    _: $LParen
+    lparen: $LParen
     fields: TupleFields
-    _: $RParen
+    rparen: $RParen
 }
 
 manual TupleFields 'a {
@@ -125,11 +119,7 @@ manual TupleFields 'a {
 rust"#[derive(Debug)]"
 enum TupleField {
     Used(GrammarSymbolOrSelf)
-    Skipped(
-        _: $Underscore
-        _: $Colon
-        GrammarSymbolOrSelf
-    )
+    Skipped($Underscore $Colon GrammarSymbolOrSelf)
 }
 
 manual EnumVariants 'a {
@@ -154,9 +144,9 @@ struct ManualNonTerminalVariant {
     inputs: OptTupleFieldset
 }
 
-manual OptTupleFieldset = @TupleFields 'a {
-    @vec_empty
-    @tuple_fields(TupleFieldset)
+manual OptTupleFieldset 'a {
+    @option_none
+    @option_some(TupleFieldset)
 }
 
 manual TerminalEnumVariants 'a {
@@ -173,10 +163,13 @@ struct TerminalEnumVariant {
 
 manual OptEqualAtUpperName 'a {
     @option_none
-    @option_some(
-        _: $Equal
-        $AtUpperName
-    )
+    @option_some(EqualAtUpperName)
+}
+
+rust"#[derive(Debug)]"
+struct EqualAtUpperName {
+    equal: $Equal
+    name: $AtUpperName
 }
 
 rust"#[derive(Debug)]"
@@ -187,11 +180,13 @@ struct Path {
 
 manual PathSegments 'a {
     @vec_empty
-    @vec_push(
-        Self
-        _: $DoubleColon
-        Name
-    )
+    @vec_push(Self PathSegment)
+}
+
+rust"#[derive(Debug)]"
+struct PathSegment {
+    double_colon: $DoubleColon
+    name: Name
 }
 
 manual Lifetimes 'a {

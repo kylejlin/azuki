@@ -128,10 +128,15 @@ impl<'a> SrcBuilder<'a> {
         let generation_hash = generation_hash(preflight.source);
         let cst::Path { crate_, segments } = preflight.bridge_path;
         let bridge_path = iter::once(crate_.raw.raw())
-            .chain(segments.iter().map(|name| match name {
-                cst::Name::Upper(name) => name.raw.raw(),
-                cst::Name::Lower(name) => name.raw.raw(),
-            }))
+            .chain(segments.iter().map(
+                |cst::PathSegment {
+                     double_colon: _,
+                     name,
+                 }| match name {
+                    cst::Name::Upper(name) => name.raw.raw(),
+                    cst::Name::Lower(name) => name.raw.raw(),
+                },
+            ))
             .collect::<Vec<_>>()
             .join("::");
         let terminal = preflight.terminal_enum.name().raw.raw();
@@ -355,9 +360,12 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
         match self.generator.takeoff.preflight.terminal_enum {
             TerminalEnum::Generated(cst::GeneratedTerminal {
                 prefix,
+                terminal_kw: _,
                 name,
                 global_lifetimes: _,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => {
                 let prefix = prefix_src(*prefix);
                 let name = name.raw.raw();
@@ -366,13 +374,19 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                 format!("{prefix}pub enum {name}{lifetimes} {{\n{variants}\n}}")
             }
             TerminalEnum::Manual(cst::ManualTerminal {
+                manual_kw: _,
+                terminal_kw: _,
                 name,
                 override_,
                 global_lifetimes: _,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => {
                 let name = name.raw.raw();
-                let target = override_.map_or(name, |name| &name.raw.raw()[1..]);
+                let target = override_
+                    .as_ref()
+                    .map_or(name, |override_| &override_.name.raw.raw()[1..]);
                 let bridge = &self.names.bridge;
                 format!("pub use {bridge}::{target} as {name};")
             }
@@ -404,9 +418,10 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                 let rule_ids = &takeoff.lhs_to_rule_ids[id];
                 let lifetimes = self.lifetime_list_src(&takeoff.non_terminal_lifetime_sets[id]);
                 match item {
-                    cst::FileItem::Start(_) => unreachable!("Start items are not non-terminals"),
+                    cst::FileItem::Start(_, _) => unreachable!("Start items are not non-terminals"),
                     cst::FileItem::Struct(cst::Struct {
                         prefix,
+                        struct_kw: _,
                         name,
                         fieldset,
                     }) => {
@@ -424,8 +439,11 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                     }
                     cst::FileItem::Enum(cst::Enum {
                         prefix,
+                        enum_kw: _,
                         name,
+                        lcurly: _,
                         variants,
+                        rcurly: _,
                     }) => {
                         let prefix = prefix_src(*prefix);
                         let name = name.raw.raw();
@@ -449,13 +467,18 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                         format!("{prefix}    pub enum {name}{lifetimes} {{\n{variants}\n    }}")
                     }
                     cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                        manual_kw: _,
                         name,
                         override_,
                         lifetimes: _,
+                        lcurly: _,
                         variants: _,
+                        rcurly: _,
                     }) => {
                         let name = name.raw.raw();
-                        let target = override_.map_or(name, |name| &name.raw.raw()[1..]);
+                        let target = override_
+                            .as_ref()
+                            .map_or(name, |override_| &override_.name.raw.raw()[1..]);
                         let bridge = &self.names.bridge;
                         format!("    pub use super::{bridge}::{target} as {name};")
                     }
@@ -465,7 +488,9 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                     cst::FileItem::ManualTerminal(_) => {
                         unreachable!("Manual terminal items are not non-terminals")
                     }
-                    cst::FileItem::Bridge(_) => unreachable!("Bridge items are not non-terminals"),
+                    cst::FileItem::Bridge(_, _) => {
+                        unreachable!("Bridge items are not non-terminals")
+                    }
                 }
             })
             .collect::<Vec<_>>()
@@ -485,12 +510,23 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
         let closing_indent = "    ".repeat(indent);
         match fieldset {
             cst::Fieldset::Empty => empty.to_owned(),
-            cst::Fieldset::Named(cst::NamedFieldset { fields }) => {
+            cst::Fieldset::Named(cst::NamedFieldset {
+                lcurly: _,
+                fields,
+                rcurly: _,
+            }) => {
                 let fields = fields
                     .iter()
                     .zip(rhs)
                     .filter_map(
-                        |(cst::NamedField { name, symbol: _ }, &symbol)| match name {
+                        |(
+                            cst::NamedField {
+                                name,
+                                colon: _,
+                                symbol: _,
+                            },
+                            &symbol,
+                        )| match name {
                             cst::UnderscoreOrLowerName::Underscore(_) => None,
                             cst::UnderscoreOrLowerName::Lower(name) => {
                                 let name = name.raw.raw();
@@ -505,7 +541,11 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                 }
                 format!(" {{\n{}\n{closing_indent}}}", fields.join("\n"))
             }
-            cst::Fieldset::Tuple(cst::TupleFieldset { fields }) => {
+            cst::Fieldset::Tuple(cst::TupleFieldset {
+                lparen: _,
+                fields,
+                rparen: _,
+            }) => {
                 let fields = fields
                     .iter()
                     .zip(rhs)
@@ -514,7 +554,7 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                             let type_ = self.symbol_type_src(symbol, true);
                             Some(format!("{field_indent}{pub_}{type_},"))
                         }
-                        cst::TupleField::Skipped(_) => None,
+                        cst::TupleField::Skipped(_, _, _) => None,
                     })
                     .collect::<Vec<_>>();
                 if fields.is_empty() {
@@ -580,9 +620,10 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
         for (id, item) in takeoff.preflight.non_terminal_defs.enumerate() {
             let rule_ids = &takeoff.lhs_to_rule_ids[id];
             match item {
-                cst::FileItem::Start(_) => unreachable!("Start items are not non-terminals"),
+                cst::FileItem::Start(_, _) => unreachable!("Start items are not non-terminals"),
                 cst::FileItem::Struct(cst::Struct {
                     prefix: _,
+                    struct_kw: _,
                     name,
                     fieldset,
                 }) => {
@@ -596,8 +637,11 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                 }
                 cst::FileItem::Enum(cst::Enum {
                     prefix: _,
+                    enum_kw: _,
                     name,
+                    lcurly: _,
                     variants,
+                    rcurly: _,
                 }) => {
                     for (
                         cst::EnumVariant {
@@ -621,14 +665,18 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                     }
                 }
                 cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                    manual_kw: _,
                     name: _,
                     override_: _,
                     lifetimes: _,
+                    lcurly: _,
                     variants,
+                    rcurly: _,
                 }) => {
                     for (cst::ManualNonTerminalVariant { function, inputs }, &rule) in
                         variants.iter().zip(rule_ids)
                     {
+                        let inputs = inputs.as_ref().map_or(&[][..], |fieldset| &fieldset.fields);
                         functions.push(self.reduce_function_src(
                             rule,
                             Reduction::Call {
@@ -644,7 +692,7 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                 cst::FileItem::ManualTerminal(_) => {
                     unreachable!("Manual terminal items are not non-terminals")
                 }
-                cst::FileItem::Bridge(_) => unreachable!("Bridge items are not non-terminals"),
+                cst::FileItem::Bridge(_, _) => unreachable!("Bridge items are not non-terminals"),
             }
         }
         functions.join("\n\n")
@@ -663,12 +711,20 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                 fieldset,
             } => match fieldset {
                 cst::Fieldset::Empty => (Vec::new(), constructor),
-                cst::Fieldset::Named(cst::NamedFieldset { fields }) => {
+                cst::Fieldset::Named(cst::NamedFieldset {
+                    lcurly: _,
+                    fields,
+                    rcurly: _,
+                }) => {
                     let variables: Vec<_> = fields
                         .iter()
                         .enumerate()
                         .map(|(i, field)| {
-                            let cst::NamedField { name, symbol: _ } = field;
+                            let cst::NamedField {
+                                name,
+                                colon: _,
+                                symbol: _,
+                            } = field;
                             match name {
                                 cst::UnderscoreOrLowerName::Underscore(_) => None,
                                 cst::UnderscoreOrLowerName::Lower(name) => {
@@ -681,7 +737,11 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                         .iter()
                         .zip(&variables)
                         .filter_map(|(field, variable)| {
-                            let cst::NamedField { name, symbol: _ } = field;
+                            let cst::NamedField {
+                                name,
+                                colon: _,
+                                symbol: _,
+                            } = field;
                             let cst::UnderscoreOrLowerName::Lower(name) = name else {
                                 return None;
                             };
@@ -699,7 +759,11 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
                     };
                     (variables, value)
                 }
-                cst::Fieldset::Tuple(cst::TupleFieldset { fields }) => {
+                cst::Fieldset::Tuple(cst::TupleFieldset {
+                    lparen: _,
+                    fields,
+                    rparen: _,
+                }) => {
                     let variables = tuple_variables(fields);
                     let arguments = variables.iter().flatten().cloned().collect::<Vec<_>>();
                     let value = if arguments.is_empty() {
@@ -892,7 +956,11 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
             override_,
             lifetimes,
         } = self.generator.takeoff.preflight.terminal_defs[id];
-        let target = override_.map_or(&name.raw.raw()[1..], |name| &name.raw.raw()[1..]);
+        let target = override_
+            .as_ref()
+            .map_or(&name.raw.raw()[1..], |override_| {
+                &override_.name.raw.raw()[1..]
+            });
         let bridge = &self.names.bridge;
         let parent = if in_non_terminals { "super::" } else { "" };
         let lifetimes = declared_lifetime_list_src(lifetimes);
@@ -904,22 +972,29 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
         let item = takeoff.preflight.non_terminal_defs[id];
         let name = non_terminal_name(item);
         let lifetimes = match item {
-            cst::FileItem::Start(_) => unreachable!("Start items are not non-terminals"),
+            cst::FileItem::Start(_, _) => unreachable!("Start items are not non-terminals"),
             cst::FileItem::Struct(cst::Struct {
                 prefix: _,
+                struct_kw: _,
                 name: _,
                 fieldset: _,
             })
             | cst::FileItem::Enum(cst::Enum {
                 prefix: _,
+                enum_kw: _,
                 name: _,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => self.lifetime_list_src(&takeoff.non_terminal_lifetime_sets[id]),
             cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                manual_kw: _,
                 name: _,
                 override_: _,
                 lifetimes,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => declared_lifetime_list_src(lifetimes),
             cst::FileItem::GeneratedTerminal(_) => {
                 unreachable!("Generated terminal items are not non-terminals")
@@ -927,7 +1002,7 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
             cst::FileItem::ManualTerminal(_) => {
                 unreachable!("Manual terminal items are not non-terminals")
             }
-            cst::FileItem::Bridge(_) => unreachable!("Bridge items are not non-terminals"),
+            cst::FileItem::Bridge(_, _) => unreachable!("Bridge items are not non-terminals"),
         };
         let module = if in_non_terminals {
             ""
@@ -951,22 +1026,29 @@ fn get_goto(state: {state}, new_kind: {non_terminal_kind}) -> ::std::option::Opt
 
 fn non_terminal_name<'a>(item: &cst::FileItem<'a>) -> &'a str {
     match item {
-        cst::FileItem::Start(_) => unreachable!("Start items are not non-terminals"),
+        cst::FileItem::Start(_, _) => unreachable!("Start items are not non-terminals"),
         cst::FileItem::Struct(cst::Struct {
             prefix: _,
+            struct_kw: _,
             name,
             fieldset: _,
         }) => name.raw.raw(),
         cst::FileItem::Enum(cst::Enum {
             prefix: _,
+            enum_kw: _,
             name,
+            lcurly: _,
             variants: _,
+            rcurly: _,
         }) => name.raw.raw(),
         cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+            manual_kw: _,
             name,
             override_: _,
             lifetimes: _,
+            lcurly: _,
             variants: _,
+            rcurly: _,
         }) => name.raw.raw(),
         cst::FileItem::GeneratedTerminal(_) => {
             unreachable!("Generated terminal items are not non-terminals")
@@ -974,7 +1056,7 @@ fn non_terminal_name<'a>(item: &cst::FileItem<'a>) -> &'a str {
         cst::FileItem::ManualTerminal(_) => {
             unreachable!("Manual terminal items are not non-terminals")
         }
-        cst::FileItem::Bridge(_) => unreachable!("Bridge items are not non-terminals"),
+        cst::FileItem::Bridge(_, _) => unreachable!("Bridge items are not non-terminals"),
     }
 }
 
@@ -984,7 +1066,7 @@ fn tuple_variables(fields: &[cst::TupleField<'_>]) -> Vec<Option<String>> {
         .enumerate()
         .map(|(i, field)| match field {
             cst::TupleField::Used(_) => Some(format!("t{i}")),
-            cst::TupleField::Skipped(_) => None,
+            cst::TupleField::Skipped(_, _, _) => None,
         })
         .collect()
 }

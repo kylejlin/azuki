@@ -8,9 +8,10 @@ pub type NamedFields<'a> = Vec<c::NamedField<'a>>;
 pub type TupleFields<'a> = Vec<c::TupleField<'a>>;
 pub type EnumVariants<'a> = Vec<c::EnumVariant<'a>>;
 pub type ManualNonTerminalVariants<'a> = Vec<c::ManualNonTerminalVariant<'a>>;
+pub type OptTupleFieldset<'a> = Option<c::TupleFieldset<'a>>;
 pub type TerminalEnumVariants<'a> = Vec<c::TerminalEnumVariant<'a>>;
-pub type OptEqualAtUpperName<'a> = Option<AtUpperName<'a>>;
-pub type PathSegments<'a> = Vec<c::Name<'a>>;
+pub type OptEqualAtUpperName<'a> = Option<c::EqualAtUpperName<'a>>;
+pub type PathSegments<'a> = Vec<c::PathSegment<'a>>;
 pub type Lifetimes<'a> = Vec<SingleQuoteLowerName<'a>>;
 
 pub fn vec_empty<T>() -> Vec<T> {
@@ -32,9 +33,4 @@ pub fn option_none<T>() -> Option<T> {
 
 pub fn option_some<T>(value: T) -> Option<T> {
     Some(value)
-}
-
-pub fn tuple_fields(fieldset: c::TupleFieldset<'_>) -> TupleFields<'_> {
-    let c::TupleFieldset { fields } = fieldset;
-    fields
 }

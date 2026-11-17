@@ -210,11 +210,12 @@ fn get_non_terminal_lifetime_sets(
     for (lhs, item) in preflight.non_terminal_defs.enumerate() {
         let rule_ids = &lhs_to_rule_ids[lhs];
         match item {
-            cst::FileItem::Start(_) => {
+            cst::FileItem::Start(_, _) => {
                 unreachable!("Non-terminal definitions cannot be start items")
             }
             cst::FileItem::Struct(cst::Struct {
                 prefix: _,
+                struct_kw: _,
                 name: _,
                 fieldset,
             }) => {
@@ -222,8 +223,11 @@ fn get_non_terminal_lifetime_sets(
             }
             cst::FileItem::Enum(cst::Enum {
                 prefix: _,
+                enum_kw: _,
                 name: _,
+                lcurly: _,
                 variants,
+                rcurly: _,
             }) => {
                 for (cst::EnumVariant { name: _, fieldset }, &rule_id) in
                     variants.iter().zip(rule_ids)
@@ -233,10 +237,13 @@ fn get_non_terminal_lifetime_sets(
                 }
             }
             cst::FileItem::ManualNonTerminal(cst::ManualNonTerminal {
+                manual_kw: _,
                 name: _,
                 override_: _,
                 lifetimes,
+                lcurly: _,
                 variants: _,
+                rcurly: _,
             }) => {
                 // A manual non-terminal type's lifetimes are independent of its conversion inputs.
                 out[lhs] = get_declared_lifetime_set(lifetimes, lifetime_ids);
@@ -247,7 +254,7 @@ fn get_non_terminal_lifetime_sets(
             cst::FileItem::ManualTerminal(_) => {
                 unreachable!("Non-terminal definitions cannot be manual terminal items")
             }
-            cst::FileItem::Bridge(_) => {
+            cst::FileItem::Bridge(_, _) => {
                 unreachable!("Non-terminal definitions cannot be bridge items")
             }
         }
@@ -309,20 +316,37 @@ fn get_stored_symbols(
 ) -> Vec<OriginalSymbolId> {
     match fieldset {
         cst::Fieldset::Empty => Vec::new(),
-        cst::Fieldset::Named(cst::NamedFieldset { fields }) => fields
+        cst::Fieldset::Named(cst::NamedFieldset {
+            lcurly: _,
+            fields,
+            rcurly: _,
+        }) => fields
             .iter()
             .zip(rhs)
-            .filter_map(|(cst::NamedField { name, symbol: _ }, &id)| match name {
-                cst::UnderscoreOrLowerName::Underscore(_) => None,
-                cst::UnderscoreOrLowerName::Lower(_) => Some(id),
-            })
+            .filter_map(
+                |(
+                    cst::NamedField {
+                        name,
+                        colon: _,
+                        symbol: _,
+                    },
+                    &id,
+                )| match name {
+                    cst::UnderscoreOrLowerName::Underscore(_) => None,
+                    cst::UnderscoreOrLowerName::Lower(_) => Some(id),
+                },
+            )
             .collect(),
-        cst::Fieldset::Tuple(cst::TupleFieldset { fields }) => fields
+        cst::Fieldset::Tuple(cst::TupleFieldset {
+            lparen: _,
+            fields,
+            rparen: _,
+        }) => fields
             .iter()
             .zip(rhs)
             .filter_map(|(field, &id)| match field {
                 cst::TupleField::Used(_) => Some(id),
-                cst::TupleField::Skipped(_) => None,
+                cst::TupleField::Skipped(_, _, _) => None,
             })
             .collect(),
     }
