@@ -8,16 +8,16 @@ extension, the project README, or a docs site.
 
 ## Browse the experiments
 
-| Study | What it explores | Assets |
-| --- | --- | --- |
-| Original king | Enbito's actual antlered king, with its sword and original materials, rendered from the copied game geometry. | [PNG](png/01_enbito_king.png) |
-| Spear carrier | The original long-spear character. | [PNG](png/02_enbito_spear.png) |
-| Antler companion | The original king with the sword hidden. | [PNG](png/03_antler_companion.png) |
-| Little bean | The original bean, eyes, and feet with both sword and antlers hidden. | [PNG](png/04_little_bean.png) |
-| Branchkeeper | A vector interpretation retaining the oversized branching antlers, faceted red body, black eyes, and chunky feet. | [SVG](svg/05_branchkeeper.svg), [PNG](png/05_branchkeeper.png), [sword variant](svg/05_branchkeeper_sword.svg) |
-| Field notes | A book-reading companion, with shorter antlers, a rock, plants, and a dragonfly. The book and hands are new additions. | [SVG](svg/06_field_notes.svg), [PNG](png/06_field_notes.png) |
-| Bean mark | A compact face and antlers for icons. Includes a gold-antler version for dark backgrounds and a cream tile. | [SVG](svg/07_bean_mark.svg), [dark-surface SVG](svg/07_bean_mark_dark.svg), [tile PNG](png/07_bean_tile.png) |
-| The crossing | Three bean companions and a banner crossing a bridge. Wide artwork for a README or docs header, without embedded lettering. | [day SVG](svg/08_bridge_day.svg), [day PNG](png/08_bridge_day.png), [night SVG](svg/08_bridge_night.svg), [night PNG](png/08_bridge_night.png) |
+| Study            | What it explores                                                                                                            | Assets                                                                                                                                         |
+| ---------------- | --------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Original king    | Enbito's actual antlered king, with its sword and original materials, rendered from the copied game geometry.               | [PNG](png/01_enbito_king.png)                                                                                                                  |
+| Spear carrier    | The original long-spear character.                                                                                          | [PNG](png/02_enbito_spear.png)                                                                                                                 |
+| Antler companion | The original king with the sword hidden.                                                                                    | [PNG](png/03_antler_companion.png)                                                                                                             |
+| Little bean      | The original bean, eyes, and feet with both sword and antlers hidden.                                                       | [PNG](png/04_little_bean.png)                                                                                                                  |
+| Branchkeeper     | A vector interpretation retaining the oversized branching antlers, faceted red body, black eyes, and chunky feet.           | [SVG](svg/05_branchkeeper.svg), [PNG](png/05_branchkeeper.png), [sword variant](svg/05_branchkeeper_sword.svg)                                 |
+| Field notes      | A book-reading companion, with shorter antlers, a rock, plants, and a dragonfly. The book and hands are new additions.      | [SVG](svg/06_field_notes.svg), [PNG](png/06_field_notes.png)                                                                                   |
+| Bean mark        | A compact face and antlers for icons. Includes a gold-antler version for dark backgrounds and a cream tile.                 | [SVG](svg/07_bean_mark.svg), [dark-surface SVG](svg/07_bean_mark_dark.svg), [tile PNG](png/07_bean_tile.png)                                   |
+| The crossing     | Three bean companions and a banner crossing a bridge. Wide artwork for a README or docs header, without embedded lettering. | [day SVG](svg/08_bridge_day.svg), [day PNG](png/08_bridge_day.png), [night SVG](svg/08_bridge_night.svg), [night PNG](png/08_bridge_night.png) |
 
 ![Imagery in a few possible contexts](previews/contexts.jpg)
 
@@ -31,16 +31,16 @@ more relaxed resting positions. All eleven individual exports are transparent
 
 ![Eight king pose experiments](previews/king_poses.jpg)
 
-| Pose | PNG |
-| --- | --- |
-| A — Easy guard | [Upright blade, weight on one foot](png/poses/a_easy_guard.png) |
-| B — Taking a breather | [Planted tip and shorter sword](png/poses/b_planted_rest.png) |
-| C — Shoulder carry | [Blade tipped back](png/poses/c_shoulder_carry.png) |
-| D — At the ready | [Tall blade and wider stance](png/poses/d_raised_guard.png) |
-| E — On the way | [Walking stride](png/poses/e_midstep.png) |
-| F — Low guard | [Shorter sword angled down](png/poses/f_low_guard.png) |
-| G — A little hop | [Lifted body and splayed feet](png/poses/g_little_hop.png) |
-| H — Diagonal guard | [Turned body and diagonal blade](png/poses/h_diagonal_guard.png) |
+| Pose                  | PNG                                                              |
+| --------------------- | ---------------------------------------------------------------- |
+| A — Easy guard        | [Upright blade, weight on one foot](png/poses/a_easy_guard.png)  |
+| B — Taking a breather | [Planted tip and shorter sword](png/poses/b_planted_rest.png)    |
+| C — Shoulder carry    | [Blade tipped back](png/poses/c_shoulder_carry.png)              |
+| D — At the ready      | [Tall blade and wider stance](png/poses/d_raised_guard.png)      |
+| E — On the way        | [Walking stride](png/poses/e_midstep.png)                        |
+| F — Low guard         | [Shorter sword angled down](png/poses/f_low_guard.png)           |
+| G — A little hop      | [Lifted body and splayed feet](png/poses/g_little_hop.png)       |
+| H — Diagonal guard    | [Turned body and diagonal blade](png/poses/h_diagonal_guard.png) |
 
 [The camera comparison](previews/king_angles.jpg) shows pose A from the
 [front](png/poses/angle_front.png), [three quarter view](png/poses/angle_three_quarter.png),
@@ -94,3 +94,9 @@ python3 mascots_playground/scripts/generate_poses.py
 Requires Python 3, NumPy, Pillow, and `rsvg-convert` on `PATH`. These were already
 available on the machine used to make the experiments. Comparison boards use
 local system fonts, with DejaVu fallbacks; those fonts are not bundled.
+
+## Licensing
+
+This directory uses copyrighted artwork from the video game _Enbito_.
+The MIT License does NOT apply to this directory.
+All rights are reserved on said artwork.
