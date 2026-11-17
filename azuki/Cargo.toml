@@ -1,6 +1,6 @@
 [package]
 name = "azuki"
-version = "2.0.0"
+version = "3.0.0"
 edition = "2024"
 rust-version = "1.98"
 license = "MIT"
@@ -11,7 +11,7 @@ categories = ["parsing"]
 readme = "../README.md"
 
 [dependencies]
-sha256 = "1.6.0"
+sha256 = { version = "1.6.0", default-features = false }
 logos = "0.16.1"
 
 [build-dependencies]
