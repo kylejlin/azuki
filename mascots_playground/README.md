@@ -21,6 +21,37 @@ extension, the project README, or a docs site.
 
 ![Imagery in a few possible contexts](previews/contexts.jpg)
 
+## King pose experiments
+
+The second round keeps the original Enbito king and tries different sword
+positions, body leans, foot placements, and camera angles. A, C, D, E, G, and H
+keep the original sword dimensions. B and F scale the whole sword down to try
+more relaxed resting positions. All eleven individual exports are transparent
+1536 × 1536 PNGs in `png/poses/`.
+
+![Eight king pose experiments](previews/king_poses.jpg)
+
+| Pose | PNG |
+| --- | --- |
+| A — Easy guard | [Upright blade, weight on one foot](png/poses/a_easy_guard.png) |
+| B — Taking a breather | [Planted tip and shorter sword](png/poses/b_planted_rest.png) |
+| C — Shoulder carry | [Blade tipped back](png/poses/c_shoulder_carry.png) |
+| D — At the ready | [Tall blade and wider stance](png/poses/d_raised_guard.png) |
+| E — On the way | [Walking stride](png/poses/e_midstep.png) |
+| F — Low guard | [Shorter sword angled down](png/poses/f_low_guard.png) |
+| G — A little hop | [Lifted body and splayed feet](png/poses/g_little_hop.png) |
+| H — Diagonal guard | [Turned body and diagonal blade](png/poses/h_diagonal_guard.png) |
+
+[The camera comparison](previews/king_angles.jpg) shows pose A from the
+[front](png/poses/angle_front.png), [three quarter view](png/poses/angle_three_quarter.png),
+and [other side](png/poses/angle_opposite_side.png).
+
+Pose recipes are in `sources/king_poses.json`; `scripts/generate_poses.py` applies
+rigid rotations and translations to the body, sword, and feet. It grounds the
+feet (or lifts the hop), plants B's sword tip, and renders at a consistent scale.
+The original GLB and first-round images are preserved. The soft ground shadows
+appear only on the comparison sheets.
+
 ## Use the images
 
 - `svg/` contains editable vector originals for the graphic studies. They have no
@@ -43,8 +74,9 @@ extension, the project README, or a docs site.
 The three GLBs in `sources/enbito/` were copied unchanged from
 `/Users/kyle/enbito/public/models/`. `sources/provenance.json` records their
 original paths and SHA-256 hashes, along with what was preserved or added.
-The banner model is retained as a reference for the flag motif. The renders use
-the original meshes in their bind poses; they do not evaluate game animations.
+The banner model is retained as a reference for the flag motif. The first-round
+renders use the original meshes in their bind poses; the second round re-poses
+the component meshes. Neither evaluates the game animations.
 No diffusion or image-generation model was used.
 
 The vector studies are drawn with paths in `scripts/generate.py`. The original
@@ -56,6 +88,7 @@ From the repository root:
 
 ```sh
 python3 mascots_playground/scripts/generate.py
+python3 mascots_playground/scripts/generate_poses.py
 ```
 
 Requires Python 3, NumPy, Pillow, and `rsvg-convert` on `PATH`. These were already

@@ -1,0 +1,112 @@
+{
+  "source": "enbito/azuki_king.glb",
+  "frame_height": 7.6,
+  "camera_target": [0, 3.05, 0],
+  "poses": [
+    {
+      "id": "a_easy_guard",
+      "label": "A  Easy guard",
+      "caption": "Upright blade, a little weight on one foot",
+      "camera": [-14, 9],
+      "body_rotation": [0, 0, -4],
+      "feet": {
+        "Leg.L": {"rotation": [0, -12, -6], "translation": [-0.06, 0, 0.03]},
+        "Leg.R": {"rotation": [-12, 16, 8], "translation": [0.11, 0.04, -0.17]}
+      },
+      "sword": {"grip": [1.05, 1.05, -0.1], "direction": [0.34, 0.92, -0.18], "roll": -8, "scale": 1}
+    },
+    {
+      "id": "b_planted_rest",
+      "label": "B  Taking a breather",
+      "caption": "Planted tip, shorter sword, relaxed lean",
+      "camera": [-25, 10],
+      "body_rotation": [0, 3, -8],
+      "feet": {
+        "Leg.L": {"rotation": [0, -17, -8], "translation": [-0.08, 0, 0]},
+        "Leg.R": {"rotation": [-6, 22, 12], "translation": [0.18, 0, 0.02]}
+      },
+      "sword": {"grip": [1.12, 2.4, -0.2], "direction": [0.08, -0.99, -0.1], "roll": 0, "scale": 0.46, "plant_tip": true}
+    },
+    {
+      "id": "c_shoulder_carry",
+      "label": "C  Shoulder carry",
+      "caption": "Blade tipped back, feet turned outward",
+      "camera": [23, 10],
+      "body_rotation": [-3, 0, 5],
+      "feet": {
+        "Leg.L": {"rotation": [0, -20, -5], "translation": [-0.1, 0, -0.04]},
+        "Leg.R": {"rotation": [8, 15, 4], "translation": [0.07, 0, 0.1]}
+      },
+      "sword": {"grip": [1.02, 1.72, 0.04], "direction": [0.62, 0.68, 0.4], "roll": 15, "scale": 1}
+    },
+    {
+      "id": "d_raised_guard",
+      "label": "D  At the ready",
+      "caption": "Tall blade, squared stance, lower camera",
+      "camera": [7, 2],
+      "body_rotation": [-3, 0, 2],
+      "feet": {
+        "Leg.L": {"rotation": [0, -15, -10], "translation": [-0.2, 0, -0.08]},
+        "Leg.R": {"rotation": [0, 18, 10], "translation": [0.2, 0, 0.1]}
+      },
+      "sword": {"grip": [1.2, 1.02, -0.12], "direction": [0.1, 0.99, -0.12], "roll": 0, "scale": 1}
+    },
+    {
+      "id": "e_midstep",
+      "label": "E  On the way",
+      "caption": "One foot forward, blade trailing behind",
+      "camera": [-32, 13],
+      "body_rotation": [5, 0, -5],
+      "feet": {
+        "Leg.L": {"rotation": [-22, -9, -10], "translation": [-0.08, 0.05, -0.42]},
+        "Leg.R": {"rotation": [24, 12, 14], "translation": [0.08, 0.16, 0.35]}
+      },
+      "sword": {"grip": [1.04, 1.12, 0], "direction": [0.28, 0.5, 0.82], "roll": -15, "scale": 1}
+    },
+    {
+      "id": "f_low_guard",
+      "label": "F  Low guard",
+      "caption": "Shorter sword, tip down and away",
+      "camera": [18, 15],
+      "body_rotation": [0, -4, 5],
+      "feet": {
+        "Leg.L": {"rotation": [-10, -17, -13], "translation": [-0.15, 0.03, -0.1]},
+        "Leg.R": {"rotation": [4, 14, 12], "translation": [0.16, 0, 0.11]}
+      },
+      "sword": {"grip": [1.05, 1.36, -0.08], "direction": [0.77, -0.39, -0.51], "roll": 12, "scale": 0.55}
+    },
+    {
+      "id": "g_little_hop",
+      "label": "G  A little hop",
+      "caption": "Lifted body, tucked and splayed feet",
+      "camera": [-18, 9],
+      "body_rotation": [-5, 0, -9],
+      "airborne": 0.42,
+      "feet": {
+        "Leg.L": {"rotation": [-28, -12, -21], "translation": [-0.18, 0.08, -0.12]},
+        "Leg.R": {"rotation": [28, 14, 22], "translation": [0.2, 0.16, 0.12]}
+      },
+      "sword": {"grip": [1.04, 1.08, -0.08], "direction": [0.42, 0.90, -0.12], "roll": 12, "scale": 1}
+    },
+    {
+      "id": "h_diagonal_guard",
+      "label": "H  Diagonal guard",
+      "caption": "Turned body, blade across the silhouette",
+      "camera": [-26, 7],
+      "body_rotation": [-4, -8, 7],
+      "feet": {
+        "Leg.L": {"rotation": [-9, -18, -15], "translation": [-0.17, 0.05, -0.18]},
+        "Leg.R": {"rotation": [15, 22, 10], "translation": [0.22, 0, 0.2]}
+      },
+      "sword": {"grip": [1.2, 1.25, -0.12], "direction": [-0.45, 0.72, -0.53], "roll": -12, "scale": 1}
+    }
+  ],
+  "angle_study": {
+    "pose": "a_easy_guard",
+    "views": [
+      {"id": "front", "label": "Front", "camera": [0, 8]},
+      {"id": "three_quarter", "label": "Three quarter", "camera": [-30, 10]},
+      {"id": "opposite_side", "label": "Other side", "camera": [30, 10]}
+    ]
+  }
+}

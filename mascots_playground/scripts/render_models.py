@@ -54,8 +54,12 @@ def normalize(vector):
 
 
 def render(pieces, size=1024, azimuth=-22, elevation=12, antlers=True,
-           weapon=True, palette=None):
-    """Return a transparent RGBA image. Camera faces the models' negative Z side."""
+           weapon=True, palette=None, frame_height=None, target=None):
+    """Return transparent RGBA, looking at the models' negative Z side.
+
+    Auto-fit by default. frame_height and a world-space target instead give
+    multiple poses the same scale and ground position for comparison sheets.
+    """
     selected = [p for p in pieces if (weapon or p["name"] != "Spear")
                 and (antlers or p["material"] != "Brown")]
     yaw, pitch = math.radians(azimuth), math.radians(elevation)
@@ -68,6 +72,9 @@ def render(pieces, size=1024, azimuth=-22, elevation=12, antlers=True,
     low, high = all_projected.min(axis=0), all_projected.max(axis=0)
     scale = size * .81 / max((high - low)[:2])
     center = (low + high) / 2
+    if frame_height is not None:
+        scale = size * .81 / frame_height
+        center = np.array(target if target is not None else [0, 3, 0]) @ camera.T
     ss = 2
     width = height = size * ss
     pixels = np.zeros((height, width, 4), dtype=np.uint8)
