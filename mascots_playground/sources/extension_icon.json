@@ -1,0 +1,14 @@
+{
+  "pose": "e_midstep",
+  "camera": [-16, 10],
+  "antler_pivot": [0, 2.2, 0.5],
+  "antler_scale": [0.62, 0.50, 1],
+  "palette": {
+    "Red": [0.35, 0.07, 0.05],
+    "Brown": [0.14, 0.08, 0.042]
+  },
+  "background": "#f6efde",
+  "outline": [71, 55, 43, 190],
+  "master_size": 1024,
+  "icon_size": 256
+}

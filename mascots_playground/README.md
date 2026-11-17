@@ -1,8 +1,8 @@
 # Mascots playground
 
 Visual experiments for the Azuki ecosystem, inspired by the bean characters in
-Enbito (2023). These are candidates to compare; none has been installed into the
-extension, the project README, or a docs site.
+Enbito (2023). Echo's walking pose has been adapted into the VS Code extension
+icon; the other studies remain candidates to compare.
 
 ![The six main imagery directions](previews/overview.jpg)
 
@@ -52,6 +52,20 @@ feet (or lifts the hop), plants B's sword tip, and renders at a consistent scale
 The original GLB and first-round images are preserved. The soft ground shadows
 appear only on the comparison sheets.
 
+## Adopted extension icon
+
+Echo keeps the walking stance, with shortened antlers and a closer camera angle
+so the bean occupies more of the square. A brighter red body, darker antlers,
+thin contour, and opaque warm cream background keep the face, feet, and narrow
+edges readable at small sizes and against light or dark extension-list surfaces.
+
+![Echo extension icon on light and dark surfaces](previews/extension_icon.jpg)
+
+The runtime asset is [`azuki-vscode/images/icon.png`](../azuki-vscode/images/icon.png),
+a 256 × 256 PNG selected by the extension manifest's `icon` field. The playground
+retains a [1024 × 1024 master](png/09_extension_echo.png), the editable recipe in
+`sources/extension_icon.json`, and `scripts/generate_extension_icon.py`.
+
 ## Use the images
 
 - `svg/` contains editable vector originals for the graphic studies. They have no
@@ -89,6 +103,7 @@ From the repository root:
 ```sh
 python3 mascots_playground/scripts/generate.py
 python3 mascots_playground/scripts/generate_poses.py
+python3 mascots_playground/scripts/generate_extension_icon.py
 ```
 
 Requires Python 3, NumPy, Pillow, and `rsvg-convert` on `PATH`. These were already

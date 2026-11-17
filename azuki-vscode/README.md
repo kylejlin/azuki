@@ -18,6 +18,7 @@ The extension uses VS Code providers, a bundled native helper from the [`azuki_i
 ## Source layout
 
 - `src/`: VS Code providers, the helper client, formatting, and Rust coloring.
+- `images/`: the extension icon and its artwork licensing notice.
 - `scripts/build.js`: builds the Rust analysis helper and formatter and copies them into the extension.
 - `scripts/package.js`: packages the extension for the current OS and architecture.
 - [`../azuki_ide/`](../azuki_ide/README.md): Rust grammar analysis used by the extension.
@@ -44,3 +45,14 @@ With `vsce` available, run `npm run package`. This builds the helper and formatt
 To install a packaged extension, run **Extensions: Install from VSIX...** in VS Code and select the `.vsix` file.
 
 If you have the earlier `kylejlin.azuki-syntax` extension installed, disable or uninstall it when switching to `kylejlin.azuki-vscode`, to avoid duplicate Azuki language support. VS Code uses [`publisher.name` as the extension ID](https://code.visualstudio.com/api/references/extension-manifest), so the renamed package installs separately.
+
+## Icon artwork
+
+The extension icon adapts Echo's walking pose from _Enbito_ (2023), with shorter
+antlers, brighter colors, and a cream background for legibility at small sizes
+and in light and dark themes. Its artwork is reserved separately from the
+extension's MIT license; see the [artwork notice](images/NOTICE.md).
+
+The source recipe and generator are in `../mascots_playground/`. From the
+repository root, run `python3 mascots_playground/scripts/generate_extension_icon.py`
+to regenerate `images/icon.png` and the larger playground export.
