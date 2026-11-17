@@ -1,219 +1,328 @@
-WIP
-
 # Azuki
 
 [![crates.io](https://img.shields.io/crates/v/azuki.svg)](https://crates.io/crates/azuki)
 
 Azuki is a minimalist parser generator for Rust.
+It is the successor to [Kiki](https://github.com/kylejlin/kiki).
 
-## Table of contents
+## TODO: Write proper docs
 
-- [How to use Azuki](#how-to-use-azuki)
-- [Why use Azuki](#why-use-azuki)
-- [Azuki's limitations](#azukis-limitations)
-- [Example](#example)
-- [Guide](#guide)
-- [Contributing](#contributing)
+I don't have time to hand-write proper docs right now.
+I tried vibe-writing docs with Codex, but all attempts so far resulted in slop.
 
-## How to use Azuki?
+So, instead, I wrote a [migration guide](#migrating-from-kiki).
+This guide assumes familiarity with Kiki.
+If you are unfamiliar with Kiki, you can read its [docs](https://github.com/kylejlin/kiki) to learn more.
 
-Read the [quickstart](./QUICKSTART.md).
+## Migrating from Kiki
 
-## Why use Azuki?
+This section assumes you are already familiar with Kiki.
+Azuki differs from Kiki in the following ways:
 
-- **Easy to learn.**
-  If you've used other parser generators before (e.g., Bison/yacc),
-  you can [learn Azuki in under 10 minutes](./QUICKSTART.md).
-- **Easy to write.**
-  Tools like Bison or lalrpop force you to write
-  a grammar, semantic actions, and syntax tree type definitions.
-  Azuki lets you write only the type definitions.
-  Azuki infers the grammar and semantic actions from the
-  type definitions.
-- **Easy to read.**
-  Azuki has a minimalist syntax.
-  This makes it easy to learn, and easy to read.
+- External references are relative to a bridge root.
+- You can use externally defined non-terminal types and semantic actions.
+- Your AST can have lifetimes.
+- There is no auto-`Box`-ing.
+- You can use an externally defined terminal enum.
+- You can use `Self` to refer to the enclosing non-terminal.
+- Outer attributes are deprecated in favor of code injection.
 
-## Azuki's limitations
+### The bridge
 
-- Azuki only supports LALR(1) grammars.
-- Azuki parses token sequences, not strings.
-  - In other words, you must provide your own lexer.
-    You can either implement the lexer by hand,
-    or use a lexer generator (e.g., [logos](https://crates.io/crates/logos)).
+In Kiki, you wrote
 
-## Example
-
-In this section, we build a toy parser that
-recognizes the arithmetic expressions.
-For example:
-
-- `42`
-- `42 + 53`
-- `29 + (893 * 7)`
-
-For simplicity, this language does not have operator precedence.
-Instead, you must use parentheses (e.g., `29 + (893 * 7)`).
-
-Let's compare how we build the parser using Bison and Azuki.
-
-### With Bison
-
-Suppose Bison hypothetically supported Rust (instead of only C/C++).
-Then you might write:
-
-```yacc
-%{
-    enum Expr {
-        Num(i32),
-        Op {
-            left: Box<Expr>,
-            kind: OpKind,
-            right: Box<Expr>,
-        },
-    }
-
-    enum OpKind {
-        Add,
-        Sub,
-        Cons,
-        Div,
-    }
+```kiki
+terminal Token {
+    $NumberLiteral: crate::lexer::token::NumberLiteral
+    $LParen: ()
+    $RParen: ()
+    $InfixOp: crate::lexer::token::InfixOp
 }
-
-%token <i32> NUM
-
-// Other than NUM, the rest of the tokens
-// only have one possible value each.
-// So, we set their type to the unit type (`()`).
-%token <()> PLUS
-%token <()> MINUS
-%token <()> STAR
-%token <()> SLASH
-%token <()> LPAREN
-%token <()> RPAREN
-
-%start expr
-
-%%
-
-expr
-    : term
-        {
-            $$ = $1;
-        }
-    | term PLUS term
-        {
-            $$ = Expr::Op {
-                left: Box::new($1),
-                kind: OpKind::Add,
-                right: Box::new($3),
-            };
-        }
-    | term MINUS term
-        {
-            $$ = Expr::Op {
-                left: Box::new($1),
-                kind: OpKind::Sub,
-                right: Box::new($3),
-            };
-        }
-    | term STAR term
-        {
-            $$ = Expr::Op {
-                left: Box::new($1),
-                kind: OpKind::Cons,
-                right: Box::new($3),
-            };
-        }
-    | term SLASH term
-        {
-            $$ = Expr::Op {
-                left: Box::new($1),
-                kind: OpKind::Div,
-                right: Box::new($3),
-            };
-        }
-;
-
-term
-    : NUM
-        {
-            $$ = Expr::Num($1);
-        }
-    | LPAREN expr RPAREN
-        {
-            $$ = $2;
-        }
-;
 ```
 
-Observe that there are _three_ things you must write:
+Then, in `src/lexer/token.rs`, you wrote
 
-1. The grammar (i.e., `expr : term ...;` and `term : NUM ...;`).
-2. The semantic actions (e.g., `$$ = Expr::Op {...};`).
-3. The syntax tree type definitions (i.e., `enum Expr {...}` and `enum OpKind {...}`).
+```rs
+pub struct NumberLiteral {
+    // ...
+}
 
-### With Azuki
+pub enum InfixOp {
+    // ...
+}
+```
 
-In Azuki, you write:
+In Azuki, you write
+
+```
+bridge crate::azuki_bridge
+
+terminal Token {
+    $NumberLiteral = @NumberLiteral
+    $LParen = @Unit
+    $RParen = @Unit
+    $InfixOp = @InfixOp
+}
+```
+
+Then, in `src/azuki_bridge.rs`, you write
+
+```rs
+pub struct NumberLiteral {
+    // ...
+}
+
+pub type Unit = ();
+
+pub enum InfixOp {
+    // ...
+}
+```
+
+#### Shorthand
+
+You may shorten `$Foo = @Foo` to `$Foo`.
+
+For example, here are two semantically equivalent code snippets.
+
+Verbose way:
 
 ```azuki
 terminal Token {
-    $Num: i32
-    $Plus: ()
-    $Minus: ()
-    $Star: ()
-    $Slash: ()
-    $LParen: ()
-    $RParen: ()
+    $NumberLiteral = @NumberLiteral
+    $LParen = @Unit
+    $RParen = @Unit
+    $InfixOp = @InfixOp
+}
+```
+
+Concise way:
+
+```azuki
+terminal Token {
+    // Notice the elision of the `= @NumberLiteral`.
+    $NumberLiteral
+    $LParen = @Unit
+    $RParen = @Unit
+    // Notice the elision of the `= @InfixOp`.
+    $InfixOp
+}
+```
+
+### External non-terminals
+
+You can now write
+
+```azuki
+manual OneOrMoreNumbers = @OneOrMoreNumbers {
+    @one($NumberLiteral)
+    @snoc(OneOrMoreNumbers $NumberLiteral)
+}
+```
+
+Then, in your bridge file:
+
+```rs
+pub type OneOrMoreNumbers = Vec<NumberLiteral>;
+
+pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
+    vec![x]
 }
 
-start Expr
+pub fn snoc<T>(mut v: OneOrMoreNumbers, x: NumberLiteral) -> OneOrMoreNumbers {
+    v.push(x);
+    v
+}
+```
 
-enum Expr {
-    Term(Term)
-    Op {
-        left: Expr
-        kind: OpKind
-        right: Expr
-    }
+#### Shorthand
+
+You may shorten `manual Foo = @Foo {...}` to `manual Foo {...}`.
+
+For example, you could rewrite the above example as
+
+```azuki
+// Notice the elision of the ` = @OneOrMoreNumbers`.
+manual OneOrMoreNumbers {
+    @one($NumberLiteral)
+    @snoc(OneOrMoreNumbers $NumberLiteral)
+}
+```
+
+#### Skipping semantic action arguments
+
+By default, all arguments are passed to the specified semantic action.
+For example, consider the `@snoc` case of the following example:
+
+```azuki
+manual OneOrMoreCommaSeparatedNumbers = @OneOrMoreCommaSeparatedNumbers {
+    @one($NumberLiteral)
+    @snoc(OneOrMoreCommaSeparatedNumbers $Comma $NumberLiteral)
+}
+```
+
+You might write a bridge like this:
+
+```rs
+pub type OneOrMoreNumbers = Vec<NumberLiteral>;
+pub type Comma = ();
+
+pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
+    vec![x]
 }
 
-enum OpKind {
-    Add(_: $Plus)
-    Sub(_: $Minus)
-    Cons(_: $Star)
-    Div(_: $Div)
+pub fn snoc<T>(mut v: OneOrMoreNumbers, _: Comma, x: NumberLiteral) -> OneOrMoreNumbers {
+    v.push(x);
+    v
 }
+```
 
-enum Term {
-    Num($Num)
-    Parenthesized(
-        _: $LParen
-        Expr
-        _: $RParen
+But notice we never use the comma argument.
+You can instead write:
+
+```azuki
+manual OneOrMoreCommaSeparatedNumbers = @OneOrMoreCommaSeparatedNumbers {
+    @one($NumberLiteral)
+    @snoc(
+        OneOrMoreCommaSeparatedNumbers
+        // Notice the added `_: `.
+        _: $Comma
+        $NumberLiteral
     )
 }
 ```
 
-Observe this code is much simpler and shorter.
-Instead of having to write the
-grammar, semantic actions, and syntax tree type definition,
-**you only need to write the syntax tree type definition.**
-Azuki infers the grammar and semantic action from the type definition.
+Then
 
-## Guide
+```rs
+pub type OneOrMoreNumbers = Vec<NumberLiteral>;
+pub type Comma = ();
 
-You can read the user guide [here](./USER_GUIDE.md).
-The guide explains Azuki in detail.
-It is _not_ a fast read.
+pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
+    vec![x]
+}
 
-If your goal is to grok Azuki as quickly as possible,
-click [here](./QUICKSTART.md).
+// Notice we removed the comma parameter.
+pub fn snoc<T>(mut v: OneOrMoreNumbers, x: NumberLiteral) -> OneOrMoreNumbers {
+    v.push(x);
+    v
+}
+```
 
-## Contributing
+### Lifetimes
 
-Contributions are welcome.
-Simply open a [new issue](https://github.com/kylejlin/azuki/issues/new) or pull request, and I'll take a look.
-All forms of contribution (e.g., bugfixes, tests, documentation, typo correction) are helpful.
+Your terminal datatype (and by extension, the rest of the AST) can have lifetimes.
+
+```azuki
+terminal Token 'a {
+    $StringLiteral 'a
+    $InfixOp
+}
+```
+
+Bridge:
+
+```rs
+pub type StringLiteral<'a> = &'a str;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum InfixOp {
+    Plus,
+    Minus,
+}
+```
+
+If a `manual` non-terminal has lifetimes, you must explicitly annotate them.
+For example:
+
+```azuki
+// Notice the `'a` annotation
+manual StringSequence 'a {
+    @one($StringLiteral)
+    @snoc(StringSequence $StringLiteral)
+}
+```
+
+Bridge:
+
+```rs
+pub type StringSequence<'a> = Vec<StringLiteral<'a>>;
+
+pub fn one<'a>(x: StringLiteral<'a>) -> StringSequence<'a> {
+    vec![x]
+}
+
+pub fn snoc<'a>(mut v: StringSequence<'a>, x: StringLiteral<'a>) -> StringSequence<'a> {
+    v.push(x);
+    v
+}
+```
+
+#### Multiple lifetimes
+
+Separate the lifetimes with spaces (no commas needed).
+For example:
+
+```azuki
+terminal Token 'a 'b 'c {
+    // ...
+}
+```
+
+#### Required annotations
+
+You must annotate lifetimes for:
+
+1. The terminal enum
+2. Each terminal enum variant
+3. Each `manual` non-terminal
+
+The set of names appearing in (2) and (3) must be a non-strict subset of the set of names appearing in (1).
+
+For example, this is illegal:
+
+```
+terminal Token 'a 'b 'c {
+    $Foo 'a 'c
+    $Bar 'b
+
+    // Illegal! `'x` is undefined.
+    $Baz 'x
+}
+```
+
+Similarly, this is also illegal:
+
+```azuki
+terminal Token 'a 'b 'c {
+    // ...
+}
+
+// Illegal! `'x` is undefined.
+manual Lorem 'x {
+    // ...
+}
+```
+
+#### Lifetime inference
+
+The lifetimes of `struct` and `enum`s are inferred from their (non-`_`) fields.
+
+For example:
+
+```azuki
+terminal Token 'a 'b 'c {
+    $Foo 'a
+    $Bar 'b
+    $Qux 'c
+}
+
+enum Lorem {
+    Ipsum($Foo)
+    Dolor(
+        _: $Bar
+        $Qux
+    )
+}
+// We infer that Lorem is polymorphic over `'a 'c`.
+```
