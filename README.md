@@ -17,7 +17,7 @@ If you are unfamiliar with Kiki, you can read its [docs](https://github.com/kyle
 ## Migrating from Kiki
 
 This section assumes you are already familiar with Kiki.
-Azuki is similar to Kiki, but if differs in several ways.
+Azuki is similar to Kiki, but it differs in several ways.
 I divide these into _key changes_ and _new features_.
 You must understand the critical changes to port your Kiki code to Azuki.
 The new features are not essential, but they may greatly improve your quality of life.
@@ -25,15 +25,15 @@ The new features are not essential, but they may greatly improve your quality of
 Key changes:
 
 - [#1.](#the-bridge) External references are relative to a bridge root.
-- You can use externally defined non-terminal types and semantic actions.
-- There is no auto-`Box`-ing.
-- Outer attributes are no longer supported. Use code injection instead.
+- [#2.](#external-non-terminals) You can use externally defined non-terminal types and semantic actions.
+- [#3.](#no-auto-box-ing) There is no auto-`Box`-ing.
+- [#4.](#code-injection) Outer attributes are no longer supported. Use code injection instead.
 
 New features:
 
-- Your AST can have lifetimes.
-- You can use an externally defined terminal enum.
-- You can use `Self` to refer to the enclosing non-terminal.
+- [#5.](#lifetimes) Your AST can have lifetimes.
+- [#6.](#external-terminal-enum) You can use an externally defined terminal enum.
+- [#7.](#self) You can use `Self` to refer to the enclosing non-terminal.
 
 ### The bridge
 
@@ -291,7 +291,71 @@ This achieves similar behavior as before.
 
 ### Code injection
 
-TODO
+In Kiki, you wrote
+
+```kiki
+#[derive(Debug)]
+struct Number {
+    value: $NumberLiteral
+}
+```
+
+In Azuki, you write
+
+```azuki
+rust"#[derive(Debug)]"
+struct Number {
+    value: $NumberLiteral
+}
+```
+
+The contents of the `rust"..."` string are inserted verbatim before the generated definition.
+You can put a Rust string before a `struct`, `enum`, or `terminal` item.
+
+#### Multiple attributes
+
+Put all the attributes in a single string.
+For example:
+
+```azuki
+rust"
+#[derive(Debug, Clone, Copy)]
+#[repr(C)]
+"
+struct Number {
+    value: $NumberLiteral
+}
+```
+
+Multiple strings are not allowed.
+For example, this is illegal:
+
+```azuki
+// Illegal! A single `struct` cannot have multiple Rust strings.
+rust"#[derive(Debug)]"
+rust"#[repr(C)]"
+struct Number {
+    value: $NumberLiteral
+}
+```
+
+#### Strings containing quotes
+
+If the injected code contains quotes, you can use `rust#"..."#`.
+For example:
+
+```azuki
+rust#"
+#[doc = "A number."]
+#[derive(Debug)]
+"#
+struct Number {
+    value: $NumberLiteral
+}
+```
+
+You can add more `#`s if needed, just like Rust's raw strings.
+The number of `#`s on each side must match.
 
 ### Lifetimes
 
@@ -413,7 +477,66 @@ enum Lorem {
 
 ### External terminal enum
 
-TODO
+You can now write
+
+```azuki
+manual terminal Token = @MyCustomToken {
+    $NumberLiteral
+    $LParen = @Unit
+    $RParen = @Unit
+    $InfixOp
+}
+```
+
+Then, in your bridge file:
+
+```rs
+pub enum MyCustomToken {
+    NumberLiteral(NumberLiteral),
+    LParen(Unit),
+    RParen(Unit),
+    InfixOp(InfixOp),
+}
+
+// ...
+```
+
+When you write `manual terminal` (instead of `terminal`), Azuki uses _your_ terminal enum (instead of generating one).
+The provided enum must have exactly the variants listed in the grammar.
+Each variant must have one unnamed field of the specified type.
+For example, `LParen(Unit)` is legal, but `LParen` is not (even though `Unit = ()`).
+
+Azuki does not enforce these requirements.
+However, if you violate them, then `cargo check` will probably fail with a type error.
+
+#### Shorthand
+
+You may shorten `manual terminal Token = @Token {...}` to `manual terminal Token {...}`.
+
+For example, the following code snippets are semantically equivalent.
+
+Verbose:
+
+```azuki
+manual terminal Token = @Token {
+    $NumberLiteral
+    $LParen = @Unit
+    $RParen = @Unit
+    $InfixOp
+}
+```
+
+With shorthand:
+
+```azuki
+// Notice the elision of the ` = @Token`.
+manual terminal Token {
+    $NumberLiteral
+    $LParen = @Unit
+    $RParen = @Unit
+    $InfixOp
+}
+```
 
 ### `Self`
 
