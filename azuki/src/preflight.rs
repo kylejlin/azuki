@@ -13,26 +13,26 @@ impl<'a> Deref for PreflightCertificate<'a> {
 }
 
 pub struct PreflightCertificateData<'a> {
-    pub(crate) source: &'a str,
-    pub(crate) file: &'a cst::File<'a>,
-    pub(crate) start_symbol: token::UpperName<'a>,
-    pub(crate) terminal_enum: TerminalEnum<'a>,
-    pub(crate) bridge_path: &'a cst::Path<'a>,
+    pub source: &'a str,
+    pub file: &'a cst::File<'a>,
+    pub start_symbol: token::UpperName<'a>,
+    pub terminal_enum: TerminalEnum<'a>,
+    pub bridge_path: &'a cst::Path<'a>,
 
     /// IDs follow declaration order, starting at 1.
-    pub(crate) terminal_defs: TerminalIdMap<&'a cst::TerminalEnumVariant<'a>>,
+    pub terminal_defs: TerminalIdMap<&'a cst::TerminalEnumVariant<'a>>,
 
     /// IDs follow declaration order, starting at 1.
     /// (Index 0 is reserved for the synthetic start symbol.)
-    pub(crate) non_terminal_defs: OriginalNonTerminalIdMap<&'a cst::FileItem<'a>>,
+    pub non_terminal_defs: OriginalNonTerminalIdMap<&'a cst::FileItem<'a>>,
 
     /// The first rule is always the synthetic rule (i.e., `{synthetic_start} <- {original_start}`).
     /// Original rules follow declaration order, including variant order within each item.
-    pub(crate) rules: Vec<Rule>,
+    pub rules: Vec<Rule>,
 }
 
 #[derive(Clone, Copy)]
-pub(crate) enum TerminalEnum<'a> {
+pub enum TerminalEnum<'a> {
     Generated(&'a cst::GeneratedTerminal<'a>),
     Manual(&'a cst::ManualTerminal<'a>),
 }
@@ -628,11 +628,11 @@ impl<T> TerminalIdMap<T> {
         Self { raw }
     }
 
-    pub(crate) fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.raw.len()
     }
 
-    pub(crate) fn enumerate(&self) -> impl Iterator<Item = (TerminalId, &T)> {
+    pub fn enumerate(&self) -> impl Iterator<Item = (TerminalId, &T)> {
         self.raw.iter().enumerate().map(|(i, value)| {
             let id = TerminalId {
                 raw: NonZeroUsize::new(i + 1).unwrap(),
@@ -661,11 +661,11 @@ impl<T> OriginalNonTerminalIdMap<T> {
         Self { raw }
     }
 
-    pub(crate) fn len(&self) -> usize {
+    pub fn len(&self) -> usize {
         self.raw.len()
     }
 
-    pub(crate) fn enumerate(&self) -> impl Iterator<Item = (OriginalNonTerminalId, &T)> {
+    pub fn enumerate(&self) -> impl Iterator<Item = (OriginalNonTerminalId, &T)> {
         self.raw.iter().enumerate().map(|(i, value)| {
             let id = OriginalNonTerminalId {
                 raw: NonZeroUsize::new(OriginalSymbolId::HIGH_BIT_MASK | (i + 1)).unwrap(),

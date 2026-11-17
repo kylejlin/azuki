@@ -2,7 +2,7 @@ use crate::internal_prelude::*;
 
 const AZUKI_VERSION: &str = env!("CARGO_PKG_VERSION");
 
-pub(crate) struct CodeGenerator<'a> {
+pub struct CodeGenerator<'a> {
     pub takeoff: &'a TakeoffCertificate<'a>,
     pub machine: &'a Machine,
     pub table: &'a Table,
