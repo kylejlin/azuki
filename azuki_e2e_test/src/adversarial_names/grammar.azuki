@@ -1,0 +1,126 @@
+start Node
+
+// Field names resemble generated locals, helpers, and module paths.
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct Node {
+    src: EoiOrTerminal
+    input: EoiOrTerminalKind
+    states: NonTerminalKind
+    nodes: State
+    rule: Node2
+    top_state: Action
+    next_kind: RuleKind
+    new_state: ACTION_TABLE
+    new_node: GOTO_TABLE
+    new_kind: AB
+    value: A_b
+    terminal_value: $AB
+    t0: $A_b
+    t1: $S2
+    t2: $S3
+    reduce: $EoiOrTerminal2
+    reduce_r1: $EoiOrTerminal3
+    get_action: $EoiOrTerminalKind2
+    get_goto: $EoiOrTerminalKind3
+    pop_and_reduce: $NonTerminalKind2
+    from_terminal: $NonTerminalKind3
+    try_into_terminal: $Node3
+    azuki_bridge: $Action2
+    std: $Action3
+    non_terminals: $ACTION_TABLE3
+    states_0: $GOTO_TABLE3
+}
+
+// Occupy preferred helper names and their first two numeric alternatives.
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct EoiOrTerminal($Eoi)
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct EoiOrTerminalKind($Eoi2)
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct NonTerminalKind($Eoi3)
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct State($State2 $State3)
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct Node2(_: $Node2 $Node)
+
+// Exercise named, tuple, empty, and skipped-only enum reductions.
+rust"#[derive(Clone, Debug, PartialEq, Eq)]"
+enum Action {
+    Shift {
+        nodes: $Shift
+        states: $Reduce
+    }
+    Reduce($Accept _: $Err $Terminal)
+    Accept
+    Err {
+        _: $NonTerminalNode
+    }
+}
+
+// The bridge's Node differs from the generated Node. The action names also
+// resemble generated helpers, so both types and calls need the right paths.
+manual RuleKind = @Node 'src {
+    @reduce_r1($RuleKind2 _: $RuleKind3 $RuleKind)
+    @pop_and_reduce(Self _: $R1 $S0)
+}
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct ACTION_TABLE($ACTION_TABLE2)
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct GOTO_TABLE($GOTO_TABLE2)
+
+// Both spellings become a_b in extraction method names. Use the pair in
+// both namespaces to require distinct methods for all four symbols.
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct AB($AB)
+
+rust"#[derive(Debug, PartialEq, Eq)]"
+struct A_b($A_b)
+
+// S collides with the parser's preferred source type parameter. The bridge
+// payload type has the same name, but is a different type in another module.
+rust"#[derive(Clone, Debug, PartialEq, Eq)]"
+terminal S 'src {
+    $Eoi = @S 'src
+    $Eoi2 = @S 'src
+    $Eoi3 = @S 'src
+    $EoiOrTerminal2 = @S 'src
+    $EoiOrTerminal3 = @S 'src
+    $EoiOrTerminalKind2 = @S 'src
+    $EoiOrTerminalKind3 = @S 'src
+    $NonTerminalKind2 = @S 'src
+    $NonTerminalKind3 = @S 'src
+    $State2 = @S 'src
+    $State3 = @S 'src
+    $Node = @S 'src
+    $Node2 = @S 'src
+    $Node3 = @S 'src
+    $Action2 = @S 'src
+    $Action3 = @S 'src
+    $RuleKind = @S 'src
+    $RuleKind2 = @S 'src
+    $RuleKind3 = @S 'src
+    $ACTION_TABLE2 = @S 'src
+    $ACTION_TABLE3 = @S 'src
+    $GOTO_TABLE2 = @S 'src
+    $GOTO_TABLE3 = @S 'src
+    $S2 = @S 'src
+    $S3 = @S 'src
+    $AB = @S 'src
+    $A_b = @S 'src
+    $Shift = @S 'src
+    $Reduce = @S 'src
+    $Accept = @S 'src
+    $Err = @S 'src
+    $Terminal = @S 'src
+    $NonTerminalNode = @S 'src
+    $S0 = @S 'src
+    $R1 = @S 'src
+}
+
+bridge crate::azuki_bridge

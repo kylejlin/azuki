@@ -11,6 +11,10 @@ azuki = { path = "../azuki" }
 
 # Each target compiles its generated parser and bridge as a separate crate.
 [[test]]
+name = "adversarial_names"
+path = "src/adversarial_names/mod.rs"
+
+[[test]]
 name = "balanced_parens"
 path = "src/balanced_parens/mod.rs"
 
