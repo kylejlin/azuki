@@ -1,6 +1,6 @@
 {
-  "name": "azuki-syntax",
-  "displayName": "Azuki",
+  "name": "azuki-vscode",
+  "displayName": "Azuki VS Code",
   "description": "Highlighting, navigation, rename, hover, and diagnostics for Azuki grammars.",
   "version": "0.0.2",
   "publisher": "kylejlin",
@@ -8,7 +8,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/kylejlin/azuki.git",
-    "directory": "azuki-syntax"
+    "directory": "azuki-vscode"
   },
   "engines": {
     "vscode": "^1.100.0"
@@ -31,7 +31,7 @@
   },
   "contributes": {
     "configuration": {
-      "title": "Azuki",
+      "title": "Azuki VS Code",
       "properties": {
         "azuki.analysisPath": {
           "type": "string",

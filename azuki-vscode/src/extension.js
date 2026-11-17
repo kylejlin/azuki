@@ -10,7 +10,7 @@ const legend = new vscode.SemanticTokensLegend(tokenTypes, ['declaration']);
 function activate(context) {
     const selector = { language: 'azuki' };
     const diagnostics = vscode.languages.createDiagnosticCollection('Azuki');
-    const output = vscode.window.createOutputChannel('Azuki');
+    const output = vscode.window.createOutputChannel('Azuki VS Code');
     const changed = new vscode.EventEmitter();
     const client = new AnalysisClient(context, diagnostics, output, changed);
     const rustExtension = vscode.extensions.getExtension('vscode.rust');

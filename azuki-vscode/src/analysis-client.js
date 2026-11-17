@@ -38,7 +38,7 @@ class AnalysisClient {
                 }
                 if (error) {
                     this.failure(document, error.code === 'ENOENT'
-                        ? 'Azuki analysis executable is missing. Run npm run build in azuki-syntax, or set azuki.analysisPath.'
+                        ? 'Azuki analysis executable is missing. Run npm run build in azuki-vscode, or set azuki.analysisPath.'
                         : `Azuki analysis failed or exceeded its 10-second limit: ${stderr || error.message}`);
                     resolve(undefined);
                     return;
