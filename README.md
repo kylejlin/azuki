@@ -332,55 +332,61 @@ enum Lorem {
 In Kiki,
 
 ```kiki
-enum OneOrMoreLorems {
-    One(Lorem)
-    Snoc(OneOrMoreLorems Lorem)
+enum Term {
+    Var(Ident)
+    Abs($Backslash Ident Term)
+    App(Term Term)
 }
 ```
 
 generates
 
 ```rs
-pub enum OneOrMoreLorems {
-    One(Box<Lorem>),
-    Snoc(Box<OneOrMoreLorems>, Box<Lorem>),
+pub enum Term {
+    Var(Box<Ident>),
+    Abs(crate::...::Backslash, Box<Ident>, Box<Term>),
+    App(Box<Term>, Box<Term>),
 }
 ```
+
+Observe how every non-terminal is boxed.
 
 In contrast, Azuki generates
 
 ```rs
-pub enum OneOrMoreLorems {
-    One(Lorem),
-    Snoc(OneOrMoreLorems, Lorem),
+pub enum Term {
+    Var(Ident),
+    Abs(crate::...::Backslash, Ident, Term),
+    App(Term, Term),
 }
 // Notice the lack of `Box`.
 ```
 
-This obviously triggers a compilation error, since `OneOrMoreLorems` has infinite size.
+This obviously triggers a compilation error, since `Term` has infinite size.
 
-One solution is to manually box:
+To solve this, you can manually box:
 
 ```azuki
-enum OneOrMoreLorems {
-    One(Lorem)
-    Snoc(BoxedOneOrMoreLorems Lorem)
+enum Term {
+    Var(Ident)
+    Abs($Backslash Ident BoxedTerm)
+    App(BoxedTerm BoxedTerm)
 }
 
-manual BoxedOneOrMoreLorems {
-    @box_new(OneOrMoreLorems)
+manual BoxedTerm {
+    @box_new(Term)
 }
 ```
 
 Bridge:
 
 ```rs
-pub type BoxedOneOrMoreLorems = Box<OneOrMoreLorems>;
+pub type BoxedTerm = Box<Term>;
 pub use Box::new as box_new;
 ```
 
 This achieves similar behavior as before.
-(...but not quite identical--`Lorem` is not boxed. However, if you want to box `Lorem`, just repeat the same process).
+(...but not quite identical--`Ident` is not boxed. However, if you want to box `Ident`, just repeat the same process).
 
 ### External terminal enum
 
