@@ -54,7 +54,7 @@ pub enum InfixOp {
 
 In Azuki, you write
 
-```
+```azuki
 bridge crate::azuki_bridge
 
 terminal Token {
@@ -129,7 +129,7 @@ pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
     vec![x]
 }
 
-pub fn snoc<T>(mut v: OneOrMoreNumbers, x: NumberLiteral) -> OneOrMoreNumbers {
+pub fn snoc(mut v: OneOrMoreNumbers, x: NumberLiteral) -> OneOrMoreNumbers {
     v.push(x);
     v
 }
@@ -164,14 +164,14 @@ manual OneOrMoreCommaSeparatedNumbers = @OneOrMoreCommaSeparatedNumbers {
 You might write a bridge like this:
 
 ```rs
-pub type OneOrMoreNumbers = Vec<NumberLiteral>;
+pub type OneOrMoreCommaSeparatedNumbers = Vec<NumberLiteral>;
 pub type Comma = ();
 
 pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
     vec![x]
 }
 
-pub fn snoc<T>(mut v: OneOrMoreNumbers, _: Comma, x: NumberLiteral) -> OneOrMoreNumbers {
+pub fn snoc(mut v: OneOrMoreCommaSeparatedNumbers, _: Comma, x: NumberLiteral) -> OneOrMoreCommaSeparatedNumbers {
     v.push(x);
     v
 }
@@ -195,7 +195,7 @@ manual OneOrMoreCommaSeparatedNumbers = @OneOrMoreCommaSeparatedNumbers {
 Then
 
 ```rs
-pub type OneOrMoreNumbers = Vec<NumberLiteral>;
+pub type OneOrMoreCommaSeparatedNumbers = Vec<NumberLiteral>;
 pub type Comma = ();
 
 pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
@@ -203,7 +203,7 @@ pub fn one(x: NumberLiteral) -> Vec<NumberLiteral> {
 }
 
 // Notice we removed the comma parameter.
-pub fn snoc<T>(mut v: OneOrMoreNumbers, x: NumberLiteral) -> OneOrMoreNumbers {
+pub fn snoc(mut v: OneOrMoreCommaSeparatedNumbers, x: NumberLiteral) -> OneOrMoreCommaSeparatedNumbers {
     v.push(x);
     v
 }
@@ -281,7 +281,7 @@ The set of names appearing in (2) and (3) must be a non-strict subset of the set
 
 For example, this is illegal:
 
-```
+```azuki
 terminal Token 'a 'b 'c {
     $Foo 'a 'c
     $Bar 'b
@@ -378,11 +378,14 @@ manual BoxedTerm {
 }
 ```
 
-Bridge:
+With the generated `Term` type imported into your bridge:
 
 ```rs
 pub type BoxedTerm = Box<Term>;
-pub use Box::new as box_new;
+
+pub fn box_new(term: Term) -> BoxedTerm {
+    Box::new(term)
+}
 ```
 
 This achieves similar behavior as before.
