@@ -17,15 +17,23 @@ If you are unfamiliar with Kiki, you can read its [docs](https://github.com/kyle
 ## Migrating from Kiki
 
 This section assumes you are already familiar with Kiki.
-Azuki differs from Kiki in the following ways:
+Azuki is similar to Kiki, but if differs in several ways.
+I divide these into _key changes_ and _new features_.
+You must understand the critical changes to port your Kiki code to Azuki.
+The new features are not essential, but they may greatly improve your quality of life.
 
-- External references are relative to a bridge root.
+Key changes:
+
+- [#1.](#the-bridge) External references are relative to a bridge root.
 - You can use externally defined non-terminal types and semantic actions.
-- Your AST can have lifetimes.
 - There is no auto-`Box`-ing.
+- Outer attributes are no longer supported. Use code injection instead.
+
+New features:
+
+- Your AST can have lifetimes.
 - You can use an externally defined terminal enum.
 - You can use `Self` to refer to the enclosing non-terminal.
-- Outer attributes are no longer supported. Use code injection instead.
 
 ### The bridge
 
@@ -79,7 +87,15 @@ pub enum InfixOp {
 }
 ```
 
-#### Shorthand
+The bridge does not need to be named `crate::azuki_bridge`.
+You can make any crate-relative path the bridge.
+For example, these are all legal `bridge` statements:
+
+- `bridge crate`
+- `bridge crate::cst::azuki_bridge`
+- `bridge crate::foo::bar::baz::lorem::ipsum::dolor`
+
+#### Terminal enum variant shorthand
 
 You may shorten `$Foo = @Foo` to `$Foo`.
 
@@ -209,6 +225,74 @@ pub fn snoc(mut v: OneOrMoreCommaSeparatedNumbers, x: NumberLiteral) -> OneOrMor
 }
 ```
 
+### No auto-`Box`-ing
+
+In Kiki,
+
+```kiki
+enum Term {
+    Var(Ident)
+    Abs($Backslash Ident Term)
+    App(Term Term)
+}
+```
+
+generates
+
+```rs
+pub enum Term {
+    Var(Box<Ident>),
+    Abs(crate::...::Backslash, Box<Ident>, Box<Term>),
+    App(Box<Term>, Box<Term>),
+}
+```
+
+Observe how every non-terminal is boxed.
+
+In contrast, Azuki generates
+
+```rs
+pub enum Term {
+    Var(Ident),
+    Abs(crate::...::Backslash, Ident, Term),
+    App(Term, Term),
+}
+// Notice the lack of `Box`.
+```
+
+This obviously triggers a compilation error, since `Term` has infinite size.
+
+To solve this, you can manually box:
+
+```azuki
+enum Term {
+    Var(Ident)
+    Abs($Backslash Ident BoxedTerm)
+    App(BoxedTerm BoxedTerm)
+}
+
+manual BoxedTerm {
+    @box_new(Term)
+}
+```
+
+With the generated `Term` type imported into your bridge:
+
+```rs
+pub type BoxedTerm = Box<Term>;
+
+pub fn box_new(term: Term) -> BoxedTerm {
+    Box::new(term)
+}
+```
+
+This achieves similar behavior as before.
+(...but not quite identical--`Ident` is not boxed. However, if you want to box `Ident`, just repeat the same process).
+
+### Code injection
+
+TODO
+
 ### Lifetimes
 
 Your terminal datatype (and by extension, the rest of the AST) can have lifetimes.
@@ -327,70 +411,6 @@ enum Lorem {
 // We infer that Lorem is polymorphic over `'a 'c`.
 ```
 
-### No auto-`Box`-ing
-
-In Kiki,
-
-```kiki
-enum Term {
-    Var(Ident)
-    Abs($Backslash Ident Term)
-    App(Term Term)
-}
-```
-
-generates
-
-```rs
-pub enum Term {
-    Var(Box<Ident>),
-    Abs(crate::...::Backslash, Box<Ident>, Box<Term>),
-    App(Box<Term>, Box<Term>),
-}
-```
-
-Observe how every non-terminal is boxed.
-
-In contrast, Azuki generates
-
-```rs
-pub enum Term {
-    Var(Ident),
-    Abs(crate::...::Backslash, Ident, Term),
-    App(Term, Term),
-}
-// Notice the lack of `Box`.
-```
-
-This obviously triggers a compilation error, since `Term` has infinite size.
-
-To solve this, you can manually box:
-
-```azuki
-enum Term {
-    Var(Ident)
-    Abs($Backslash Ident BoxedTerm)
-    App(BoxedTerm BoxedTerm)
-}
-
-manual BoxedTerm {
-    @box_new(Term)
-}
-```
-
-With the generated `Term` type imported into your bridge:
-
-```rs
-pub type BoxedTerm = Box<Term>;
-
-pub fn box_new(term: Term) -> BoxedTerm {
-    Box::new(term)
-}
-```
-
-This achieves similar behavior as before.
-(...but not quite identical--`Ident` is not boxed. However, if you want to box `Ident`, just repeat the same process).
-
 ### External terminal enum
 
 TODO
@@ -417,7 +437,3 @@ manual OneOrMoreCommaSeparatedNumbers {
     @snoc(Self $Comma $NumberLiteral)
 }
 ```
-
-### Code injection
-
-TODO
