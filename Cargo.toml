@@ -3,7 +3,6 @@
 members = [
     "kiki",
     "kiki_e2e_test",
-    "mimi",
     "azuki",
     "azuki_e2e_test",
 ]
