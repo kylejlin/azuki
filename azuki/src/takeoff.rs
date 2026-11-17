@@ -1,6 +1,18 @@
 use crate::internal_prelude::*;
 
 pub struct TakeoffCertificate<'a> {
+    data: TakeoffCertificateData<'a>,
+}
+
+impl<'a> Deref for TakeoffCertificate<'a> {
+    type Target = TakeoffCertificateData<'a>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.data
+    }
+}
+
+pub struct TakeoffCertificateData<'a> {
     pub preflight: PreflightCertificate<'a>,
 
     pub lhs_to_rule_ids: OriginalNonTerminalIdMap<Vec<RuleId>>,
@@ -36,11 +48,13 @@ impl<'a> TakeoffCertificate<'a> {
         );
 
         Self {
-            preflight,
-            lhs_to_rule_ids,
-            non_terminal_first_sets,
-            terminal_lifetime_sets,
-            non_terminal_lifetime_sets,
+            data: TakeoffCertificateData {
+                preflight,
+                lhs_to_rule_ids,
+                non_terminal_first_sets,
+                terminal_lifetime_sets,
+                non_terminal_lifetime_sets,
+            },
         }
     }
 }

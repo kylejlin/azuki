@@ -1,6 +1,18 @@
 use crate::internal_prelude::*;
 
 pub struct PreflightCertificate<'a> {
+    data: PreflightCertificateData<'a>,
+}
+
+impl<'a> Deref for PreflightCertificate<'a> {
+    type Target = PreflightCertificateData<'a>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.data
+    }
+}
+
+pub struct PreflightCertificateData<'a> {
     pub(crate) source: &'a str,
     pub(crate) file: &'a cst::File<'a>,
     pub(crate) start_symbol: token::UpperName<'a>,
@@ -141,14 +153,16 @@ pub fn preflight_check<'a>(
     } = definitions;
 
     Ok(PreflightCertificate {
-        source,
-        file,
-        start_symbol,
-        terminal_enum,
-        bridge_path,
-        terminal_defs,
-        non_terminal_defs,
-        rules,
+        data: PreflightCertificateData {
+            source,
+            file,
+            start_symbol,
+            terminal_enum,
+            bridge_path,
+            terminal_defs,
+            non_terminal_defs,
+            rules,
+        },
     })
 }
 
