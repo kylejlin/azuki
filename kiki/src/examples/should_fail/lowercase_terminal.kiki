@@ -1,7 +1,0 @@
-start Epsilon
-
-struct Epsilon
-
-terminal Token {
-    $num_lit: isize
-}

@@ -1,9 +1,0 @@
-start Num
-
-struct Num {
-    Val: $NumLit
-}
-
-terminal Token {
-    $NumLit: String
-}

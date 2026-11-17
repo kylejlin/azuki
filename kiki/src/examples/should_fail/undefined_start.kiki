@@ -1,7 +1,0 @@
-start Fo
-
-struct Foo
-
-terminal Token {
-    $Num: isize
-}

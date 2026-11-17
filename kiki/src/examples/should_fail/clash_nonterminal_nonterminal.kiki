@@ -1,9 +1,0 @@
-start Lorem
-
-struct Lorem
-
-struct Lorem
-
-terminal Foo {
-    $Ident: String
-}

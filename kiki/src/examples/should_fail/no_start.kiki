@@ -1,5 +1,0 @@
-struct Epsilon
-
-terminal Token {
-    $Num: isize
-}
