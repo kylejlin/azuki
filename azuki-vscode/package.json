@@ -3,7 +3,7 @@
   "displayName": "Azuki",
   "description": "Highlighting, navigation, rename, hover, formatting, and diagnostics for Azuki grammars.",
   "icon": "images/icon.png",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "publisher": "kylejlin",
   "license": "MIT",
   "repository": {
@@ -59,7 +59,11 @@
         "extensions": [
           ".azuki"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./images/azuki-file-light.svg",
+          "dark": "./images/azuki-file-dark.svg"
+        }
       }
     ],
     "grammars": [

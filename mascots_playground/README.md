@@ -92,6 +92,12 @@ The individual 16 × 16 SVGs are in [`svg/file_icons/`](svg/file_icons/), named 
 the candidate and its `dark` or `light` appearance. Edit the symbols or palettes
 in the gallery fragment, then rerun the script to update both outputs.
 
+Bravo (B, bean seam) is the adopted `.azuki` file icon. The extension bundles
+copies of `seam-light.svg` and `seam-dark.svg` in
+[`azuki-vscode/images/`](../azuki-vscode/images/); its
+[artwork instructions](../azuki-vscode/README.md#icon-artwork) describe refreshing
+those copies after regeneration.
+
 Seti's upstream revision and embedded font checksum are recorded in
 [`sources/file_icon_gallery/provenance.json`](sources/file_icon_gallery/provenance.json).
 Its copyright and permission notice are preserved in

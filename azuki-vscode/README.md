@@ -2,6 +2,7 @@
 
 The Azuki extension provides these features for [Azuki](https://github.com/kylejlin/azuki) grammars (`.azuki` files):
 
+- A bean-with-a-seam file icon, with light and dark variants bundled in the extension.
 - Parser-aware highlighting for declarations and references.
 - Rust coloring inside injection strings, including multiline strings and matching hash delimiters. Azuki's lexer determines each injection's boundary; the built-in VS Code Rust grammar colors its contents independently.
 - Go to Definition (including Command-click on macOS) and hover showing the grammar definition. `Self` resolves to its enclosing non-terminal.
@@ -18,7 +19,7 @@ The extension uses VS Code providers, a bundled native helper from the [`azuki_i
 ## Source layout
 
 - `src/`: VS Code providers, the helper client, formatting, and Rust coloring.
-- `images/`: the extension icon and its artwork licensing notice.
+- `images/`: the extension icon, file icons, and their artwork licensing notice.
 - `scripts/build.js`: builds the Rust analysis helper and formatter and copies them into the extension.
 - `scripts/package.js`: packages the extension for the current OS and architecture.
 - [`../azuki_ide/`](../azuki_ide/README.md): Rust grammar analysis used by the extension.
@@ -56,3 +57,19 @@ extension's MIT license; see the [artwork notice](images/NOTICE.md).
 The source recipe and generator are in `../mascots_playground/`. From the
 repository root, run `python3 mascots_playground/scripts/generate_extension_icon.py`
 to regenerate `images/icon.png` and the larger playground export.
+
+The `.azuki` file icon is Bravo (B, bean seam) from the
+[file icon gallery](../mascots_playground/previews/file_icon_gallery.html).
+Its 16 × 16 SVGs are registered as the Azuki language's default icons in
+`package.json`, so they ship with the language support. VS Code's built-in Seti
+theme uses these icons; other file icon themes can override or hide language
+icons, as described in the [VS Code file icon documentation](https://code.visualstudio.com/api/extension-guides/file-icon-theme#language-default-icons).
+
+To regenerate the file icon artwork and copy the adopted variants into the
+extension, run these commands from the repository root:
+
+```sh
+python3 mascots_playground/scripts/generate_file_icon_gallery.py
+cp mascots_playground/svg/file_icons/seam-light.svg azuki-vscode/images/azuki-file-light.svg
+cp mascots_playground/svg/file_icons/seam-dark.svg azuki-vscode/images/azuki-file-dark.svg
+```
