@@ -1,4 +1,4 @@
-use azuki::formatter::{FormatOptions, format};
+use azuki::experimental::formatter::{FormatOptions, format};
 
 use std::{
     env, fs,
