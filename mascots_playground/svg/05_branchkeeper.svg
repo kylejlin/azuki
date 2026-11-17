@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+<title id="title">Azuki branchkeeper</title><desc id="description">A red bean with round black eyes, black feet, and tall branching antlers.</desc>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M211 274 180 208 153 141 124 55 118 25 M153 141 188 100 200 57 M180 208 116 184 75 140 62 100 M116 184 118 142 M75 140 40 136 M141 106 100 80 83 52 M188 100 219 90 M302 274 340 210 368 144 395 58 399 24 M368 144 335 103 321 61 M340 210 403 186 438 141 447 101 M403 186 404 145 M438 141 473 136 M381 105 425 78 442 49 M335 103 307 93" stroke="#292d36" stroke-width="23"/><path d="M211 274 180 208 153 141 124 55 118 25 M153 141 188 100 200 57 M180 208 116 184 75 140 62 100 M116 184 118 142 M75 140 40 136 M141 106 100 80 83 52 M188 100 219 90 M302 274 340 210 368 144 395 58 399 24 M368 144 335 103 321 61 M340 210 403 186 438 141 447 101 M403 186 404 145 M438 141 473 136 M381 105 425 78 442 49 M335 103 307 93" stroke="#c29b62" stroke-width="14"/></g><path d="m197 389-34 26 7 31 36 17 35-33-6-29Z" fill="#292d36"/>
+<path d="m291 396-18 35 30 31 40-13 3-31-28-26Z" fill="#292d36"/>
+<path d="M249 252C207 250 172 280 165 326c-8 47 20 86 83 117 57-16 92-57 92-102 0-48-38-88-77-88Z" fill="#a8463e" stroke="#292d36" stroke-width="8" stroke-linejoin="round"/>
+<path d="m249 256-45 53-18 64 25 35 37 31-11-77 28-109Z" fill="#bf5d50"/>
+<path d="m265 254 36 57 15 62-27 45 26-17 21-37-1-39-31-51Z" fill="#8b3634"/>
+<path d="m186 319 14-10 14 4 9 16-2 22-13 10-15-7-10-17Z" fill="#292d36"/>
+<path d="m284 318 15-5 14 10 5 20-7 17-16 3-13-13-3-18Z" fill="#292d36"/>
+<path d="m211 274 17-9" fill="none" stroke="#e58b70" stroke-width="7" stroke-linecap="round"/>
+</svg>

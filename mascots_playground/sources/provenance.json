@@ -1,0 +1,36 @@
+{
+  "source_project": "Enbito (2023)",
+  "source_models": [
+    {
+      "file": "sources/enbito/azuki_banner.glb",
+      "sha256": "a8bf52b0d06f3b6f00eab9fc68c96d58e1622a6d78ae73100404973e0b08e33d",
+      "original": "/Users/kyle/enbito/public/models/azuki_banner.glb"
+    },
+    {
+      "file": "sources/enbito/azuki_king.glb",
+      "sha256": "a5b359b31b3f545edfc764b17cda8cadaada353e1072ca3e0577ed4bd47619f9",
+      "original": "/Users/kyle/enbito/public/models/azuki_king.glb"
+    },
+    {
+      "file": "sources/enbito/azuki_spear.glb",
+      "sha256": "ee2e1cbd9584b8ea16ca6e2f7dd422049295d162b717e12611204440142afff4",
+      "original": "/Users/kyle/enbito/public/models/azuki_spear.glb"
+    }
+  ],
+  "method": "Original bind-pose geometry rendered locally; vector studies drawn procedurally from the character design.",
+  "preserved_traits": [
+    "red faceted bean body",
+    "large black eyes",
+    "chunky black feet",
+    "branching brown antlers",
+    "sword, spear and banner motifs"
+  ],
+  "new_elements": [
+    "simplified vector shapes",
+    "open book and small hands",
+    "bridge landscape",
+    "compact icon proportions",
+    "day and night palettes"
+  ],
+  "fonts": "Comparison boards use local system fonts; reusable SVG imagery contains no fonts or text."
+}

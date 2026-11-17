@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
+<title id="title">Azuki bean mark</title><desc id="description">A simple red bean face with two short branching antlers.</desc>
+<g fill="none" stroke="#292d36" stroke-width="32" stroke-linecap="round" stroke-linejoin="round">
+<path d="m190 208-40-75-9-66m27 99-63-35m215 77 42-75 9-66m-28 99 64-35"/>
+</g>
+<path d="M253 144c-91-5-141 62-141 145 0 71 51 126 141 157 90-31 147-93 147-163 0-79-59-134-133-139Z" fill="#a8463e"/>
+<path d="M253 144c-65 23-99 96-89 165 6 51 34 98 89 137-90-31-141-86-141-157 0-83 50-150 141-145Z" fill="#bb5a4e"/>
+<ellipse cx="194" cy="282" rx="22" ry="29" fill="#292d36"/>
+<ellipse cx="315" cy="282" rx="22" ry="29" fill="#292d36"/>
+</svg>

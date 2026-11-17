@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="800" viewBox="0 0 800 800" role="img" aria-labelledby="title description">
+<title id="title">Azuki field notes</title><desc id="description">An antlered bean reading a book on a small mossy rock, with a dragonfly nearby.</desc>
+<circle cx="400" cy="387" r="300" fill="#e9e7cf"/>
+<path d="M128 663q256-46 539 0" fill="none" stroke="#d5cbb3" stroke-width="5"/>
+<path d="m197 652 36-64 182-22 158 23 39 64Z" fill="#b0b49b"/>
+<path d="m233 588 89 23 93-45m-93 45-15 50m108-95 61 65 97-42" fill="none" stroke="#919b82" stroke-width="3"/>
+<g transform="translate(68 52) scale(1.29)"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M208 269 182 201 157 168 151 111 M181 201 208 167 216 131 M157 168 118 157 101 127 M300 269 328 204 351 164 359 107 M329 204 301 171 295 133 M351 164 393 152 411 121" stroke="#292d36" stroke-width="27"/><path d="M208 269 182 201 157 168 151 111 M181 201 208 167 216 131 M157 168 118 157 101 127 M300 269 328 204 351 164 359 107 M329 204 301 171 295 133 M351 164 393 152 411 121" stroke="#c29b62" stroke-width="17"/></g><path d="m197 389-34 26 7 31 36 17 35-33-6-29Z" fill="#292d36"/>
+<path d="m291 396-18 35 30 31 40-13 3-31-28-26Z" fill="#292d36"/>
+<path d="M249 252C207 250 172 280 165 326c-8 47 20 86 83 117 57-16 92-57 92-102 0-48-38-88-77-88Z" fill="#a8463e" stroke="#292d36" stroke-width="8" stroke-linejoin="round"/>
+<path d="m249 256-45 53-18 64 25 35 37 31-11-77 28-109Z" fill="#bf5d50"/>
+<path d="m265 254 36 57 15 62-27 45 26-17 21-37-1-39-31-51Z" fill="#8b3634"/>
+<path d="m186 319 14-10 14 4 9 16-2 22-13 10-15-7-10-17Z" fill="#292d36"/>
+<path d="m284 318 15-5 14 10 5 20-7 17-16 3-13-13-3-18Z" fill="#292d36"/>
+<path d="m211 274 17-9" fill="none" stroke="#e58b70" stroke-width="7" stroke-linecap="round"/><path d="M169 374q28-13 79 10 52-23 91-9l-13 63q-38-13-78 4-43-21-77-7Z" fill="#f6efde" stroke="#292d36" stroke-width="7" stroke-linejoin="round"/>
+<path d="m248 384 0 57m-62-46q25-2 44 9m-43 6 42 12m36-18q24-9 49-7m-49 25 40-9" fill="none" stroke="#baa88c" stroke-width="4" stroke-linecap="round"/>
+<path d="m169 390-12 8 8 17 16-4m153-20 12 9-8 16-15-4" fill="#a8463e" stroke="#292d36" stroke-width="6" stroke-linejoin="round"/></g>
+<g fill="none" stroke="#637961" stroke-width="6" stroke-linecap="round"><path d="m152 650-10-48m9 28-28-16m27 2 19-26m447 60 16-67m-12 45 29-23m-23 0-13-17"/></g>
+<g transform="translate(617 187) rotate(-14)"><path d="M0 0q-28-42-55-29-11 17 55 29-17 35-44 32-19-13 44-32 27-40 52-27 10 19-52 27 22 33 44 31 18-13-44-31Z" fill="#a2b6b0"/>
+<path d="M0-8 0 39" stroke="#292d36" stroke-width="6" stroke-linecap="round"/><circle cy="-10" r="7" fill="#292d36"/></g>
+</svg>
