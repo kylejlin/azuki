@@ -326,3 +326,89 @@ enum Lorem {
 }
 // We infer that Lorem is polymorphic over `'a 'c`.
 ```
+
+### No auto-`Box`-ing
+
+In Kiki,
+
+```kiki
+enum OneOrMoreLorems {
+    One(Lorem)
+    Snoc(OneOrMoreLorems Lorem)
+}
+```
+
+generates
+
+```rs
+pub enum OneOrMoreLorems {
+    One(Box<Lorem>),
+    Snoc(Box<OneOrMoreLorems>, Box<Lorem>),
+}
+```
+
+In contrast, Azuki generates
+
+```rs
+pub enum OneOrMoreLorems {
+    One(Lorem),
+    Snoc(OneOrMoreLorems, Lorem),
+}
+// Notice the lack of `Box`.
+```
+
+This obviously triggers a compilation error, since `OneOrMoreLorems` has infinite size.
+
+One solution is to manually box:
+
+```azuki
+enum OneOrMoreLorems {
+    One(Lorem)
+    Snoc(BoxedOneOrMoreLorems Lorem)
+}
+
+manual BoxedOneOrMoreLorems {
+    @box_new(OneOrMoreLorems)
+}
+```
+
+Bridge:
+
+```rs
+pub type BoxedOneOrMoreLorems = Box<OneOrMoreLorems>;
+pub use Box::new as box_new;
+```
+
+This achieves similar behavior as before.
+(...but not quite identical--`Lorem` is not boxed. However, if you want to box `Lorem`, just repeat the same process).
+
+### External terminal enum
+
+TODO
+
+### `Self`
+
+You can use `Self` to refer to the enclosing non-terminal.
+For example, the following two examples are semantically equivalent.
+
+Without `Self`:
+
+```azuki
+manual OneOrMoreCommaSeparatedNumbers {
+    @one($NumberLiteral)
+    @snoc(OneOrMoreCommaSeparatedNumbers $Comma $NumberLiteral)
+}
+```
+
+With `Self`:
+
+```azuki
+manual OneOrMoreCommaSeparatedNumbers {
+    @one($NumberLiteral)
+    @snoc(Self $Comma $NumberLiteral)
+}
+```
+
+### Code injection
+
+TODO
