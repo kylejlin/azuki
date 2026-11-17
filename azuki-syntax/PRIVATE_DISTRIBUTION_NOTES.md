@@ -1,11 +1,14 @@
 # Private distribution
 
-From this directory, package the extension using `vsce`:
+From this directory, install dependencies and package the extension using `vsce`:
 
 ```sh
-vsce package --no-dependencies
+npm ci
+npm run package
 ```
 
 If `vsce` is unavailable, install it with `npm install -g @vscode/vsce`.
 
-In VS Code, run **Extensions: Install from VSIX...** and select `azuki-syntax-0.0.1.vsix`.
+The package includes the native analysis helper and JavaScript runtime dependencies. Do not use `--no-dependencies`; Rust highlighting needs those dependencies. The package targets the build machine's OS and architecture.
+
+In VS Code, run **Extensions: Install from VSIX...** and select the generated `azuki-syntax` `.vsix` file.

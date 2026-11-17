@@ -4,4 +4,5 @@ resolver = "3"
 members = [
     "azuki",
     "azuki_e2e_test",
+    "azuki_ide",
 ]

@@ -2,3 +2,7 @@
 .vscode-test/**
 .gitignore
 *.vsix
+scripts/**
+package-lock.json
+PRIVATE_DISTRIBUTION_NOTES.md
+node_modules/**/types/**

@@ -2,6 +2,7 @@ pub mod bit_set;
 pub mod codegen;
 pub mod convenience;
 pub mod cst;
+pub mod formatter;
 pub mod lexer;
 pub mod machine;
 pub mod ntt;

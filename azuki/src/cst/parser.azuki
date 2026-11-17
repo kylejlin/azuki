@@ -150,7 +150,7 @@ manual OptTupleFieldset = @TupleFields 'a {
 }
 
 manual TerminalEnumVariants 'a {
-    @vec_empty
+    @vec_one(TerminalEnumVariant)
     @vec_push(Self TerminalEnumVariant)
 }
 

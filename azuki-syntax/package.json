@@ -1,8 +1,8 @@
 {
   "name": "azuki-syntax",
-  "displayName": "Azuki Syntax",
-  "description": "Syntax highlighting for Azuki grammars.",
-  "version": "0.0.1",
+  "displayName": "Azuki",
+  "description": "Highlighting, navigation, rename, hover, and diagnostics for Azuki grammars.",
+  "version": "0.0.2",
   "publisher": "kylejlin",
   "license": "MIT",
   "repository": {
@@ -16,7 +16,34 @@
   "categories": [
     "Programming Languages"
   ],
+  "main": "./src/extension.js",
+  "extensionKind": ["workspace"],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true,
+      "restrictedConfigurations": ["azuki.analysisPath"]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "vscode:prepublish": "npm run build",
+    "package": "node scripts/package.js"
+  },
   "contributes": {
+    "configuration": {
+      "title": "Azuki",
+      "properties": {
+        "azuki.analysisPath": {
+          "type": "string",
+          "default": "",
+          "scope": "machine-overridable",
+          "description": "Absolute path to an azuki_ide executable. Empty uses the executable bundled with this extension."
+        }
+      }
+    },
+    "configurationDefaults": {
+      "[azuki]": { "editor.semanticHighlighting.enabled": true }
+    },
     "languages": [
       {
         "id": "azuki",
@@ -37,5 +64,9 @@
         "path": "./syntaxes/azuki.tmLanguage.json"
       }
     ]
+  },
+  "dependencies": {
+    "vscode-oniguruma": "^1.7.0",
+    "vscode-textmate": "^9.3.2"
   }
 }
