@@ -12,13 +12,19 @@ manual Items 'a {
 
 rust"#[derive(Debug)]"
 enum FileItem {
-    Start(_: $StartKw $UpperName)
+    Start(
+        _: $StartKw
+        $UpperName
+    )
     Struct(Struct)
     Enum(Enum)
     ManualNonTerminal(ManualNonTerminal)
     GeneratedTerminal(GeneratedTerminal)
     ManualTerminal(ManualTerminal)
-    Bridge(_: $BridgeKw Path)
+    Bridge(
+        _: $BridgeKw
+        Path
+    )
 }
 
 rust"#[derive(Debug)]"
@@ -119,7 +125,11 @@ manual TupleFields 'a {
 rust"#[derive(Debug)]"
 enum TupleField {
     Used(GrammarSymbolOrSelf)
-    Skipped(_: $Underscore _: $Colon GrammarSymbolOrSelf)
+    Skipped(
+        _: $Underscore
+        _: $Colon
+        GrammarSymbolOrSelf
+    )
 }
 
 manual EnumVariants 'a {
@@ -163,7 +173,10 @@ struct TerminalEnumVariant {
 
 manual OptEqualAtUpperName 'a {
     @option_none
-    @option_some(_: $Equal $AtUpperName)
+    @option_some(
+        _: $Equal
+        $AtUpperName
+    )
 }
 
 rust"#[derive(Debug)]"
@@ -174,7 +187,11 @@ struct Path {
 
 manual PathSegments 'a {
     @vec_empty
-    @vec_push(Self _: $DoubleColon Name)
+    @vec_push(
+        Self
+        _: $DoubleColon
+        Name
+    )
 }
 
 manual Lifetimes 'a {
