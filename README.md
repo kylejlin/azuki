@@ -28,13 +28,13 @@ Key changes:
 - [#2.](#external-non-terminals) You can use externally defined non-terminal types and semantic actions.
 - [#3.](#no-auto-box-ing) There is no auto-`Box`-ing.
 - [#4.](#code-injection) Outer attributes are no longer supported. Use code injection instead.
-- [TODO](TODO) Non-terminals are namespaced under `non_terminals`.
+- [#5.](#non-terminal-namespace) Non-terminals are namespaced under `non_terminals`.
 
 New features:
 
-- [#5.](#lifetimes) Your AST can have lifetimes.
-- [#6.](#external-terminal-enum) You can use an externally defined terminal enum.
-- [#7.](#self) You can use `Self` to refer to the enclosing non-terminal.
+- [#6.](#lifetimes) Your AST can have lifetimes.
+- [#7.](#external-terminal-enum) You can use an externally defined terminal enum.
+- [#8.](#self) You can use `Self` to refer to the enclosing non-terminal.
 
 ### The bridge
 
@@ -399,7 +399,7 @@ So, you must update `src/lib.rs` to:
 ```rs
 mod parser;
 
-pub use parser::{non_terminal::{Foo, Bar}, Token, parse};
+pub use parser::{non_terminals::{Foo, Bar}, Token, parse};
 ```
 
 ### Lifetimes
