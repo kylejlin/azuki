@@ -1,0 +1,8 @@
+{
+  "pose": "e_midstep",
+  "camera": [-32, 13],
+  "size": 768,
+  "display_size": 280,
+  "dark_background": "#f6efde",
+  "dark_corner_radius": 64
+}

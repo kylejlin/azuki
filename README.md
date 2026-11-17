@@ -1,5 +1,13 @@
 # Azuki
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kylejlin/azuki/refs/heads/main/images/echo-dark.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/kylejlin/azuki/refs/heads/main/images/echo-light.png">
+    <img src="https://raw.githubusercontent.com/kylejlin/azuki/refs/heads/main/images/echo-light.png" alt="Azuki's antlered bean mascot walking with a sword." width="280" height="280">
+  </picture>
+</p>
+
 [![crates.io](https://img.shields.io/crates/v/azuki.svg)](https://crates.io/crates/azuki)
 
 Azuki is a minimalist parser generator for Rust.

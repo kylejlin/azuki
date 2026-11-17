@@ -1,8 +1,9 @@
 # Mascots playground
 
 Visual experiments for the Azuki ecosystem, inspired by the bean characters in
-Enbito (2023). Echo's walking pose has been adapted into the VS Code extension
-icon; the other studies remain candidates to compare.
+Enbito (2023). Echo's walking pose has been adopted for the repository README and
+adapted into the VS Code extension icon; the other studies remain candidates to
+compare.
 
 ![The six main imagery directions](previews/overview.jpg)
 
@@ -66,6 +67,25 @@ a 256 × 256 PNG selected by the extension manifest's `icon` field. The playgrou
 retains a [1024 × 1024 master](png/09_extension_echo.png), the editable recipe in
 `sources/extension_icon.json`, and `scripts/generate_extension_icon.py`.
 
+## Adopted README artwork
+
+The repository README displays Echo's full walking pose at 280 × 280 pixels,
+using `<picture>` and `prefers-color-scheme` to select the image for the theme.
+The light source is transparent. The dark source places the same figure on a
+rounded cream panel. Both use the original proportions and colors, with
+identical framing so the figure stays in position when the source changes.
+
+![README artwork in both themes](previews/readme_themes.jpg)
+
+The 768 × 768 sources are [`images/echo-light.png`](../images/echo-light.png) and
+[`images/echo-dark.png`](../images/echo-dark.png), with their licensing notice in
+[`images/NOTICE.md`](../images/NOTICE.md). The README uses absolute raw GitHub URLs,
+as Rust's README does, so the image paths also have a repository base when the
+README is copied into the crate package. These URLs refer to the `main` branch.
+
+The recipe is `sources/readme_artwork.json`; regenerate the images with
+`scripts/generate_readme_artwork.py`.
+
 ## Use the images
 
 - `svg/` contains editable vector originals for the graphic studies. They have no
@@ -104,6 +124,7 @@ From the repository root:
 python3 mascots_playground/scripts/generate.py
 python3 mascots_playground/scripts/generate_poses.py
 python3 mascots_playground/scripts/generate_extension_icon.py
+python3 mascots_playground/scripts/generate_readme_artwork.py
 ```
 
 Requires Python 3, NumPy, Pillow, and `rsvg-convert` on `PATH`. These were already
