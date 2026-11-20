@@ -13,10 +13,6 @@
 Azuki is a minimalist parser generator for Rust.
 It is the successor to [Kiki](https://github.com/kylejlin/kiki).
 
-## VS Code extension
-
-[Azuki VS Code](azuki-vscode/README.md) provides highlighting, definition navigation, rename, hover, and diagnostics for `.azuki` files. Its source, build scripts, and packaging instructions are in `azuki-vscode/`. The [Rust analysis helper](azuki_ide/README.md) is a separate crate.
-
 ## TODO: Write proper docs
 
 I don't have time to hand-write proper docs right now.

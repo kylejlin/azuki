@@ -1,18 +1,18 @@
 [package]
 name = "azuki"
-version = "3.0.0"
+version = "3.1.0"
 edition = "2024"
 rust-version = "1.98"
-license = "MIT"
 description = "A minimalist parser generator for Rust."
-repository = "https://github.com/kylejlin/azuki"
-keywords = ["parser", "generator", "LALR", "grammar"]
-categories = ["parsing"]
 readme = "../README.md"
+repository = "https://github.com/kylejlin/azuki"
+license = "MIT"
+keywords = ["LALR", "generator", "grammar", "parser"]
+categories = ["parsing"]
 
 [dependencies]
-sha256 = { version = "1.6.0", default-features = false }
 logos = "0.16.1"
+sha256 = { version = "1.6.0", default-features = false }
 
 [build-dependencies]
 # Pin the published bootstrap version so later releases cannot depend on themselves.
